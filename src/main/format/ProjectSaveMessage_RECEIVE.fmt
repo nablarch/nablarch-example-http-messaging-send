@@ -1,0 +1,5 @@
+file-type:        "JSON"
+text-encoding:    "UTF-8"
+
+[data]
+1  statusCode  X  #    ステータスコード
