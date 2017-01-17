@@ -22,7 +22,7 @@ import nablarch.fw.results.TransactionAbnormalEnd;
 
 /**
  * プロジェクト登録HTTPメッセージを発行する業務アクションクラス。
- * <p/>
+ * <p>
  * プロジェクト登録要求テーブルを参照し、要求がある場合はプロジェクト登録HTTPメッセージを発行する。
  */
 public class ProjectSaveMessageAction extends BatchAction<SqlRow> {
