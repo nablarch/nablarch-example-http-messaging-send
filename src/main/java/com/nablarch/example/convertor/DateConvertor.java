@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * {@link Date}オブジェクトを"yyyyMMdd"フォーマットの文字列に変換するコンバータ。
- * 
+ *
  * @author Nabu Rakutaro
  */
 public class DateConvertor extends ValueConvertorSupport<Object, String> {
