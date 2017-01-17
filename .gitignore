@@ -108,6 +108,7 @@ monitor.log
 .idea/copyright
 !.idea/misc.xml
 !.idea/modules.xml
+!.idea/dictionaries
 
 
 ## File-based project format:
