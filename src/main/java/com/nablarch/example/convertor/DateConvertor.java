@@ -28,7 +28,6 @@ public class DateConvertor extends ValueConvertorSupport<Object, String> {
      * @return yyyyMMddフォーマットの文字列
      * @throws IllegalArgumentException Date型ではないデータが引き渡された場合
      */
-    @SuppressWarnings("ReturnOfNull")
     @Override
     public String convertOnWrite(Object data) {
 
