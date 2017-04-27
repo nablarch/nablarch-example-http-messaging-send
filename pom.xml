@@ -246,13 +246,36 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
-          <classifier>${env.classifier}</classifier>
           <archive>
             <manifestEntries>
               <Target-Environment>${env.name}</Target-Environment>
             </manifestEntries>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <classpathPrefix>lib/</classpathPrefix>
+              <mainClass>nablarch.fw.launcher.Main</mainClass>
+            </manifest>
           </archive>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>distribution.xml</descriptor>
+              </descriptors>
+              <finalName>application-${project.version}</finalName>
+              <appendAssemblyId>false</appendAssemblyId>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <!-- ================ここから任意で使用するツールの設定================ -->
       <!-- エンティティクラス生成等を行うための設定 -->
