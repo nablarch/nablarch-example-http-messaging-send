@@ -28,14 +28,10 @@ Gitを使用している場合、アプリケーションを配置したいデ�
     $mvn -P gsp clean generate-resources
     $mvn -P gsp install:install-file
 
-#### 3.2. アプリケーションのビルド、依存するライブラリの取得
+#### 3.2. アプリケーションのビルド
 次に、アプリケーションをビルドします。以下のコマンドを実行してください。
 
     $mvn clean package
-
-ビルド後、以下のコマンドを実行し依存するライブラリを取得します。
-
-    $mvn dependency:copy-dependencies -DoutputDirectory=target/dependency
 
 ### 4. アプリケーションの起動
 
@@ -44,8 +40,17 @@ Gitを使用している場合、アプリケーションを配置したいデ�
 以下のコマンドで、HTTPメッセージングの送信側のExampleが起動します。
 
     $mvn -P gsp gsp-dba:import-schema
-    $java -cp target/nablarch-example-http-messaging-send-<バージョン>-dev.jar;target/dependency/* nablarch.fw.launcher.Main -diConfig classpath:http-messaging-send-boot.xml -requestPath ProjectSaveMessageAction -userId batch_user
+    $mvn exec:java -Dexec.mainClass=nablarch.fw.launcher.Main -Dexec.args="'-diConfig' 'classpath:http-messaging-send-boot.xml' '-requestPath' 'ProjectSaveMessageAction' '-userId' 'batch_user'"
+    
+なお、 `maven-assembly-plugin` を使用して実行可能jarの生成を行っているため、以下の手順にて実行することもできる。
 
+1. ``target/application-<version_no>.zip`` を任意のディレクトリに解凍する。
+2. 以下のコマンドにて実行する
+
+  ```
+      java -jar <1で解凍したディレクトリ名>/nablarch-example-http-messaging-send-<version_no>.jar -diConfig classpath:http-messaging-send-boot.xml -requestPath ProjectSaveMessageAction -userId batch_user
+  ```
+    
 
 起動に成功すると、HTTPメッセージングの受信側との通信を行います。
 送信側のアプリケーションログが以下のように出力されます。

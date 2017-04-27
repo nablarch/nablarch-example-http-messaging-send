@@ -23,7 +23,7 @@
     <orderEntry type="library" name="Maven: com.nablarch.framework:nablarch-core-validation-ee:1.0.5" level="project" />
     <orderEntry type="library" name="Maven: javax.validation:validation-api:1.1.0.Final" level="project" />
     <orderEntry type="library" name="Maven: com.nablarch.framework:nablarch-core-validation:1.0.3" level="project" />
-    <orderEntry type="library" name="Maven: com.nablarch.framework:nablarch-fw-batch:1.2.0" level="project" />
+    <orderEntry type="library" name="Maven: com.nablarch.framework:nablarch-fw-batch:1.2.1" level="project" />
     <orderEntry type="library" name="Maven: com.nablarch.framework:nablarch-fw-standalone:1.1.2" level="project" />
     <orderEntry type="library" name="Maven: com.nablarch.framework:nablarch-core-jdbc:1.2.0" level="project" />
     <orderEntry type="library" name="Maven: com.nablarch.framework:nablarch-core-applog:1.0.2" level="project" />
