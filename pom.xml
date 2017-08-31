@@ -167,6 +167,15 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>travis</id>
+      <distributionManagement>
+        <site>
+          <id>travis</id>
+          <url>${develop_test_report_url}</url>
+        </site>
+      </distributionManagement>
+    </profile>
   </profiles>
 
   <dependencyManagement>
@@ -311,5 +320,12 @@
       </plugin>
       <!-- ================ここまで任意で使用するツールの設定================ -->
     </plugins>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-webdav-jackrabbit</artifactId>
+        <version>3.0.0</version>
+      </extension>
+    </extensions>
   </build>
 </project>
