@@ -1,5 +1,10 @@
 nablarch-example-http-messaging-send
 ======================================
+
+| master | develop |
+|:-----------|:------------|
+|[![Build Status](https://travis-ci.org/nablarch/nablarch-example-http-messaging-send.svg?branch=master)](https://travis-ci.org/nablarch/nablarch-example-http-messaging-send)|[![Build Status](https://travis-ci.org/nablarch/nablarch-example-http-messaging-send.svg?branch=develop)](https://travis-ci.org/nablarch/nablarch-example-http-messaging-send)|
+
 Nablarch FrameworkのHTTPメッセージングの送信側のExampleです。
 HTTPメッセージングの受信側のExampleと組み合わせて使用します。
 
