@@ -30,14 +30,14 @@ Gitを使用している場合、アプリケーションを配置したいデ�
 アプリケーションをビルドします。以下のコマンドを実行してください。
 
     $mvn clean package
-    $mvn generate-resources
 
 ### 4. アプリケーションの起動
 
 先にHTTPメッセージングの受信側のExampleを起動しておいてください。
 
-以下のコマンドで、HTTPメッセージングの送信側のExampleが起動します。
+以下のコマンドで、データベースの状態を最新化、HTTPメッセージングの送信側のExampleを起動します。
 
+    $mvn generate-resources
     $mvn exec:java -Dexec.mainClass=nablarch.fw.launcher.Main -Dexec.args="'-diConfig' 'classpath:http-messaging-send-boot.xml' '-requestPath' 'ProjectSaveMessageAction' '-userId' 'batch_user'"
     
 なお、 `maven-assembly-plugin` を使用して実行可能jarの生成を行っているため、以下の手順にて実行することもできる。
