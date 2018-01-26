@@ -150,6 +150,9 @@
               <mainClass>nablarch.fw.launcher.Main</mainClass>
             </manifest>
           </archive>
+          <excludes>
+            <exclude>*.dicon</exclude>
+          </excludes>
         </configuration>
       </plugin>
       <plugin>
