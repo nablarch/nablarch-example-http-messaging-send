@@ -9,8 +9,8 @@
   <import file="nablarch/schema-config.xml" />
 
   <!-- 環境設定ファイル -->
-  <config-file file="common.config" />
-  <config-file file="env.config" />
+  <config-file file="common.properties" />
+  <config-file file="env.properties" />
 
   <!-- データベース設定-->
   <import file="nablarch/batch/db-for-batch.xml" />
@@ -32,7 +32,7 @@
   <import file="nablarch/batch/batch-data-read.xml" />
 
   <!-- HTTPメッセージング送信設定読み込み -->
-  <config-file file="messaging/messaging.config" />
+  <config-file file="messaging/messaging.properties" />
 
   <!-- フォーマット定義ファイルの配置先パス、拡張子の設定 -->
   <component name="filePathSetting" class="nablarch.core.util.FilePathSetting" autowireType="None">
