@@ -1,12 +1,16 @@
 package com.nablarch.example;
 
-import com.nablarch.example.test.BatchRequestTestBase;
-import org.junit.Test;
+import nablarch.test.core.batch.BatchRequestTestSupport;
+import nablarch.test.junit5.extension.batch.BatchRequestTest;
+import org.junit.jupiter.api.Test;
 
 /**
  * プロジェクト登録HTTPメッセージ送信リクエスト単体テストクラス。
  */
-public class ProjectSaveMessageActionRequestTest extends BatchRequestTestBase {
+@BatchRequestTest
+class ProjectSaveMessageActionRequestTest {
+
+    BatchRequestTestSupport support;
 
     /**
      * 正常終了のテストケース。
@@ -14,8 +18,8 @@ public class ProjectSaveMessageActionRequestTest extends BatchRequestTestBase {
      * 全ての出力対象フィールドにデータがある場合。
      */
     @Test
-    public void testNormalEndExistAllFields() {
-        execute();
+    void testNormalEndExistAllFields() {
+        support.execute(support.testName.getMethodName());
     }
 
     /**
@@ -24,15 +28,15 @@ public class ProjectSaveMessageActionRequestTest extends BatchRequestTestBase {
      * 必須の出力対象フィールドにのみデータがある場合。
      */
     @Test
-    public void testNormalEndOnlyRequireFields() {
-        execute();
+    void testNormalEndOnlyRequireFields() {
+        support.execute(support.testName.getMethodName());
     }
 
     /**
      * 異常系のテストケース。
      */
     @Test
-    public void testAbNormalEnd() {
-        execute();
+    void testAbNormalEnd() {
+        support.execute(support.testName.getMethodName());
     }
 }
