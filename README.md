@@ -8,8 +8,8 @@ HTTPメッセージングの受信側のExampleと組み合わせて使用しま
 
 ### 1.動作環境
 実行環境に以下のソフトウェアがインストールされている事を前提とします。
-* Java Version : 8
-* Maven 3.0.5以降
+* Java Version : 17
+* Maven 3.9.0以降
 
 なお、このアプリケーションはH2 Database Engineを組み込んでいます。別途DBサーバのインストールは必要ありません。
 
@@ -50,33 +50,41 @@ Gitを使用している場合、アプリケーションを配置したいデ�
 送信側のアプリケーションログが以下のように出力されます。
 
 
-    2016-07-13 16:18:12.579 -INFO- ROO [null] @@@@ APPLICATION SETTINGS @@@@
-            system settings = {
-            }
-            business date = [20140123]
-    2016-07-13 16:18:12.603 -INFO- ROO [201607131618126030002] start
-    2016-07-13 16:18:12.666 -INFO- ROO [201607131618126030002] @@@@ HTTP SENT MESSAGE @@@@
-            thread_name    = [pool-1-thread-1]
-            message_id     = [null]
-            destination    = [POST http://localhost:9080/ProjectSaveAction]
-            correlation_id = [null]
-            message_header = [{X-Message-Id=1, Destination=POST http://localhost:9080/ProjectSaveAction}]
-            message_body   = [{"projectName":"プロジェクト００１","projectType":"development","projectClass":"s",
-                              "projectStartDate":"20100918","projectEndDate":"20150409","clientId":"1",
-                              "projectManager":"鈴木","projectLeader":"佐藤","userId":"100","note":"備考欄",
-                              "sales":"10000","costOfGoodsSold":"1000","sga":"2000","allocationOfCorpExpenses":"3000"}]
-    2016-07-13 16:18:13.633 -INFO- ROO [201607131618126030002] @@@@ HTTP RECEIVED MESSAGE @@@@
-            thread_name    = [pool-1-thread-1]
-            message_id     = [null]
-            destination    = [null]
-            correlation_id = [null]
-            message_header = [{=HTTP/1.1 201 Created, Transfer-Encoding=chunked, X-Frame-Options=SAMEORIGIN, Server=Apache-Coyote/1.1,
-                              X-Correlation-Id=1, STATUS_CODE=201, Date=Wed, 13 Jul 2016 07:18:13 GMT, Content-Type=application/json;charset=UTF-8}]
-            message_body   = [{"statusCode":"201"}]
-    2016-07-13 16:18:13.657 -INFO- ROO [201607131618125800001]
-            Thread Status: normal end.
-            Thread Result:[200 Success] The request has succeeded.
-    2016-07-13 16:18:13.658 -INFO- ROO [201607131618125800001] TOTAL COMMIT COUNT =[1]
-    2016-07-13 16:18:13.659 -INFO- ROO [201607131618125800001] @@@@ END @@@@ exit code = [0] execute time(ms) = [1789]
+```log
+2023-02-15 15:48:09.536 -INFO- nablarch.fw.launcher.Main [null] boot_proc = [] proc_sys = [http-messaging-send] req_id =
+[null] usr_id = [null] @@@@ APPLICATION SETTINGS @@@@
+        system settings = {
+        }
+        business date = [20140123]
+2023-02-15 15:48:09.556 -INFO- com.nablarch.example.ProjectSaveMessageAction [202302151548095560002] boot_proc = [] proc_
+sys = [http-messaging-send] req_id = [ProjectSaveMessageAction] usr_id = [batch_user] start
+2023-02-15 15:48:09.583 -INFO- MESSAGING [202302151548095560002] boot_proc = [] proc_sys = [http-messaging-send] req_id =
+ [ProjectSaveMessageAction] usr_id = [batch_user] @@@@ HTTP SENT MESSAGE @@@@
+        thread_name    = [pool-1-thread-1]
+        message_id     = [null]
+        destination    = [POST http://localhost:9080/ProjectSaveAction]
+        correlation_id = [null]
+        message_header = [{X-Message-Id=1, Destination=POST http://localhost:9080/ProjectSaveAction}]
+        message_body   = [{"projectName":"プロジェクト００１","projectType":"development","projectClass":"s","projectStar
+tDate":"20100918","projectEndDate":"20150409","clientId":1,"projectManager":"鈴木","projectLeader":"佐藤","note":"備考欄"
+,"sales":10000,"costOfGoodsSold":1000,"sga":2000,"allocationOfCorpExpenses":3000}]
+2023-02-15 15:48:10.422 -INFO- MESSAGING [202302151548095560002] boot_proc = [] proc_sys = [http-messaging-send] req_id =
+ [ProjectSaveMessageAction] usr_id = [batch_user] @@@@ HTTP RECEIVED MESSAGE @@@@
+        thread_name    = [pool-1-thread-1]
+        message_id     = [null]
+        destination    = [null]
+        correlation_id = [null]
+        message_header = [{=HTTP/1.1 201 Created, Transfer-Encoding=chunked, Server=Jetty(12.0.0.alpha3), X-Correlation-I
+d=1, STATUS_CODE=201, Date=Wed, 15 Feb 2023 06:48:09 GMT, Content-Type=application/json;charset=UTF-8}]
+        message_body   = [{"statusCode":"201"}]
+2023-02-15 15:48:10.443 -INFO- nablarch.fw.handler.MultiThreadExecutionHandler [202302151548095370001] boot_proc = [] pro
+c_sys = [http-messaging-send] req_id = [ProjectSaveMessageAction] usr_id = [batch_user]
+Thread Status: normal end.
+Thread Result:[200 Success] The request has succeeded.
+2023-02-15 15:48:10.445 -INFO- nablarch.core.log.app.BasicCommitLogger [202302151548095370001] boot_proc = [] proc_sys =
+[http-messaging-send] req_id = [ProjectSaveMessageAction] usr_id = [batch_user] TOTAL COMMIT COUNT = [1]
+2023-02-15 15:48:10.447 -INFO- nablarch.fw.launcher.Main [null] boot_proc = [] proc_sys = [http-messaging-send] req_id =
+[null] usr_id = [null] @@@@ END @@@@ exit code = [0] execute time(ms) = [1373]
+```
 
 ログ出力後、本Exampleは自動的に終了します。

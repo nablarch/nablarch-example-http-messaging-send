@@ -4,13 +4,13 @@
 
   <groupId>com.nablarch.example</groupId>
   <artifactId>nablarch-example-http-messaging-send</artifactId>
-  <version>5u23</version>
+  <version>6</version>
   <packaging>jar</packaging>
 
   <properties>
     <!-- 利用するJavaのバージョン -->
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -35,7 +35,7 @@
       <dependency>
         <groupId>com.nablarch.profile</groupId>
         <artifactId>nablarch-bom</artifactId>
-        <version>5u23</version>
+        <version>6</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -122,7 +122,7 @@
       <plugin>
         <groupId>jp.co.tis.gsp</groupId>
         <artifactId>gsp-dba-maven-plugin</artifactId>
-        <version>4.6.0</version>
+        <version>5.0.0</version>
         <configuration>
           <erdFile>src/main/resources/entity/data-model.edm</erdFile>
           
@@ -149,7 +149,6 @@
             <goals>
               <goal>generate-ddl</goal>
               <goal>execute-ddl</goal>
-              <goal>generate-entity</goal>
               <goal>load-data</goal>
             </goals>
           </execution>
