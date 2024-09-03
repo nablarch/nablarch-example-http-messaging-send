@@ -56,9 +56,7 @@ Gitを使用している場合、アプリケーションを配置したいデ�
 1. ``target/application-<version_no>.zip`` を任意のディレクトリに解凍する。
 2. 以下のコマンドにて実行する
 
-  ```
-      java -jar <1で解凍したディレクトリ名>/nablarch-example-http-messaging-send-<version_no>.jar -diConfig classpath:http-messaging-send-boot.xml -requestPath ProjectSaveMessageAction -userId batch_user
-  ```
+       $java -jar <1で解凍したディレクトリ名>/nablarch-example-http-messaging-send-<version_no>.jar -diConfig classpath:http-messaging-send-boot.xml -requestPath ProjectSaveMessageAction -userId batch_user
     
 
 起動に成功すると、HTTPメッセージングの受信側との通信を行います。
