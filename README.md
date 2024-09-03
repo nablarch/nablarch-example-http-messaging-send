@@ -9,7 +9,7 @@ HTTPメッセージングの受信側のExampleと組み合わせて使用しま
 ### 1.動作環境
 実行環境に以下のソフトウェアがインストールされている事を前提とします。
 * Java Version : 17
-* Maven 3.9.0以降
+* Maven 3.9.9以降
 
 なお、このアプリケーションはH2 Database Engineを組み込んでいます。別途DBサーバのインストールは必要ありません。
 
@@ -27,6 +27,20 @@ Gitを使用している場合、アプリケーションを配置したいデ�
 
     $mvn clean package
 
+実行に成功すると、以下のようなログがコンソールに出力されます。
+
+    (中略)
+    [INFO] ------------------------------------------------------------------------
+    [INFO] BUILD SUCCESS
+    [INFO] ------------------------------------------------------------------------
+    (中略)
+
+#### データベースのセットアップ及びエンティティクラスの作成について
+
+アプリケーションを実行するためにはデータベースのセットアップ及びエンティティクラスの作成が必要ですが、これは`mvn package`の実行に含まれています。この処理は`mvn generate-resources`で個別に実行することもできます。
+
+※gspプラグインをJava 17で実行するためにはJVMオプションの指定が必要ですが、そのオプションは`.mvn/jvm.config`で指定しています。
+
 ### 4. アプリケーションの起動
 
 先にHTTPメッセージングの受信側のExampleを起動しておいてください。
@@ -41,9 +55,7 @@ Gitを使用している場合、アプリケーションを配置したいデ�
 1. ``target/application-<version_no>.zip`` を任意のディレクトリに解凍する。
 2. 以下のコマンドにて実行する
 
-  ```
-      java -jar <1で解凍したディレクトリ名>/nablarch-example-http-messaging-send-<version_no>.jar -diConfig classpath:http-messaging-send-boot.xml -requestPath ProjectSaveMessageAction -userId batch_user
-  ```
+       $java -jar <1で解凍したディレクトリ名>/nablarch-example-http-messaging-send-<version_no>.jar -diConfig classpath:http-messaging-send-boot.xml -requestPath ProjectSaveMessageAction -userId batch_user
     
 
 起動に成功すると、HTTPメッセージングの受信側との通信を行います。
