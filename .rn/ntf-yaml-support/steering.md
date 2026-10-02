@@ -57,7 +57,11 @@ NTF（Nablarch Testing Framework）のAI対応として、`nablarch-example-http
 
 # Scripts
 
-（必要になった場合に `.rn/ntf-yaml-support/scripts/` 配下へ格納し、用途をここと該当 task-N.md に記載する。現時点で作成したスクリプトはない。）
+（必要になった場合に `.rn/ntf-yaml-support/scripts/` 配下へ格納し、用途をここと該当 task-N.md に記載する。現時点で作成したスクリプトはない。XLS/XLSX の変換・比較は `nablarch-testing-converter:convert` と `diff`/`md5sum` のアドホック実行で行った。）
+
+# Evidence
+
+- `.rn/ntf-yaml-support/xls-xlsx-comparison/from-xls/`・`from-xlsx/`: Task #3 の調査で `.xls`・`.xlsx` をそれぞれ単独変換したYAML（両者バイト一致）。`.xlsx` が内容重複であることの根拠。
 
 # Tasks
 
@@ -96,12 +100,12 @@ NTF（Nablarch Testing Framework）のAI対応として、`nablarch-example-http
 - [x] `pom.xml` の `<build><plugins>` に `nablarch-testing-converter:1.0.0-SNAPSHOT` をビルドプラグイン（plugin直下 configuration に変換パラメータを設定。CLIで convert ゴールを実行）として追加する
 - [x] `unit-test.xml` に `yamlInterpreters` リストと `YamlTestDataParser` コンポーネントを追加する（batch方式）
 - [x] `mvn validate` / `mvn dependency:resolve` / `mvn help:describe`（converter）で解決確認
-- [ ] 変更したファイルをコミットする
+- [x] 変更したファイルをコミットする（713f56a）
 - [x] self-check
-- [x] QA expert review (Agent: general-purpose / Opus 4.8) — 再レビュー実施
-- [x] language expert review (Agent: general-purpose / Opus 4.8) — 再レビュー実施
-- [x] software-engineering expert review (Agent: general-purpose / Opus 4.8) — 再レビュー実施
-- [ ] user review
+- [x] QA expert review (Agent: general-purpose / Opus 4.8) — OK
+- [x] language expert review (Agent: general-purpose / Opus 4.8) — OK
+- [x] software-engineering expert review (Agent: general-purpose / Opus 4.8) — OK（前回NG解消）
+- [x] user review（2026-10-02 承認）
 
 **Completion criteria**:
 
@@ -114,23 +118,25 @@ NTF（Nablarch Testing Framework）のAI対応として、`nablarch-example-http
 
 **Purpose**: `nablarch-testing-converter` を使って Excel のテストデータをYAML形式に変換し、テストクラスと同じディレクトリに配置して、変換内容をサンプリングで確認する。
 
-**Prerequisites**: #2、および `.xlsx` の扱いの決定（Decisions）
+**Prerequisites**: #2、および `.xlsx` の扱いの決定（Decisions）→ ① 変換前に削除で確定
 
 **Steps**:
 
-- [ ] 変換対象（`ProjectSaveMessageActionRequestTest.xls`）をYAML変換する
-- [ ] 変換後、ExcelとYAMLの内容をサンプリングで比較し一致を確認する（最低3件、元データが3件未満なら元データ件数分）
-- [ ] サンプリング比較結果を `checks/task-3.md` に記録する（差異があれば原因を調査しユーザーに報告し、修正せずに止める）
-- [ ] 変換したYAMLファイルをコミットする（Excelはまだ削除しない）
-- [ ] self-check
-- [ ] QA expert review (Agent: general-purpose / Opus 4.8)
+- [x] `.xls`/`.xlsx` を個別にYAML変換して内容比較（`.rn/.../xls-xlsx-comparison/` に配置、バイト一致を確認）
+- [x] 未使用の `.xlsx` を削除する（converter が同名併存を拒否するため変換前に必須）
+- [x] 変換対象（`ProjectSaveMessageActionRequestTest.xls`）を `mvn ...:convert` でYAML変換する（rc=0）
+- [x] 変換後、ExcelとYAMLの内容をサンプリングで比較し一致を確認する（各YAML 3件以上。setUpDbは空）
+- [x] サンプリング比較結果を `checks/task-3.md` に記録する
+- [x] 変換したYAMLファイルと `.xlsx` 削除をコミットする（`.xls` 本体はまだ削除しない）（91f32ec）
+- [x] self-check
+- [x] QA expert review (Agent: general-purpose / Opus 4.8) — OK
 - [ ] user review
 
 **Completion criteria**:
 
 - 変換対象のExcelに対応するYAMLファイルが生成されている
 - サンプリング比較でExcelとYAMLの内容が一致している（差異があれば報告して停止）
-- 変換後のYAMLファイルがコミットされている
+- 変換後のYAMLファイル（および未使用`.xlsx`の削除）がコミットされている
 
 ### #4: Excelを削除する
 
@@ -175,13 +181,13 @@ NTF（Nablarch Testing Framework）のAI対応として、`nablarch-example-http
 
 # Decisions
 
-- **[未決] 同名の `.xls` / `.xlsx` の扱い**: NTF は `.xls` のみ使用し `.xlsx` はシャドウされた未使用ファイル。変換は正データである `.xls` を YAML 化する方針。`.xlsx` は (a) 変換対象外として Task #4 で単純削除する / (b) 変換対象に含めるが出力YAMLが衝突するため不可、のいずれか。→ ユーザーに確認する。
+- **[確定 2026-10-02] 同名の `.xls` / `.xlsx` の扱い（①）**: `.xls` を正データとしてYAML変換し、未使用の `.xlsx` は**変換前に削除**する。根拠: (1) `.xls`/`.xlsx` から独立変換したYAMLがバイト単位で完全一致（`.xlsx` は内容重複、情報損失なし）、(2) converter は同名の `.xls`/`.xlsx` 併存を "same-name Excel books coexist" エラーで拒否するため変換前の削除が必須。`.xlsx` 削除は Task #3 で実施（当初想定の Task #4 から前倒し）。比較エビデンスは `.rn/ntf-yaml-support/xls-xlsx-comparison/` に保存。
 - **[確定 2026-10-02] nablarch-testing-converter の宣言方式**: ビルドプラグイン（`<build><plugins>`、`convert` ゴール設定付き）とする。test依存にはしない。理由: converter は Maven プラグインでテスト実行時には不要、XLS→YAML 変換時のみ使用。test依存だと convert ゴール短縮形が使えず、POI/snakeyaml 等の推移依存がテストクラスパスに混入するリスク（language/SW 両レビュー指摘）。web/batch テンプレートに準拠。指示書 V1.1 の該当記載も「test依存→ビルドプラグイン」に修正済み。
 
 # State
 
 - **Status**: in progress
 - **Date**: 2026-10-02
-- **Last completed**: #1 ベースライン全パス確認（self-check / QA 済み、user review 待ち）
-- **Next**: #1 の user review → `.xlsx` 扱いの決定 → #2 設定変更
-- **Notes**: ブランチ `ntf-yaml-support`（develop 起点）。全テストは1クラス3件のみ。
+- **Last completed**: #2 設定変更（承認済み、713f56a）。#3 変換実行中（`.xlsx`削除＋`.xls`→YAML変換・サンプリング比較まで完了、コミット・QAレビュー・user review 残り）
+- **Next**: #3 のコミット → QA expert review → user review
+- **Notes**: ブランチ `ntf-yaml-support`（develop 起点）。全テストは1クラス3件のみ。Q2 は①（`.xlsx`変換前削除）で確定。生成YAMLは比較エビデンス `from-xls` とバイト一致。
