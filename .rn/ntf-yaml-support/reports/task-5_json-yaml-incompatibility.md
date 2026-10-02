@@ -129,3 +129,29 @@ LANG=ja_JP.UTF-8 mvn clean test  # → BUILD FAILURE, Errors: 3, YamlSchemaValid
 ```
 
 比較用に、Excel版（develop）では `LANG=ja_JP.UTF-8 mvn clean test` が BUILD SUCCESS（Tests run: 3）となる（Task #1 で確認済み）。
+
+## 9. 検証（実験）結果と総括
+
+### 9.1 `length` 値を変えた3通りの実験（いずれも一時変更・コミットせず復元済み）
+
+`length: "JSON"` を書き換えて `mvn clean test` を実行し、スキーマ検証とテスト実行の挙動を確認した。
+
+| 実験（`length` の値） | スキーマ検証 | テスト結果 | 失敗の内訳・内容 |
+|---|---|---|---|
+| `"JSON"`（元の変換結果） | ✗ 失敗 | BUILD FAILURE | `Errors: 3` — ロード時 `YamlSchemaValidationException`（`^([0-9]+|-)$` 違反） |
+| `"-"`（オンデマンド長） | ✓ 通過 | BUILD FAILURE | `Failures: 3` — `couldn't find resource [.../testXxx]` → `ComparisonFailure`（status/STATUS 不一致） |
+| `<実バイト長の数値>`（20 / 285 / 313 等、JSON本文のUTF-8バイト長） | ✓ 通過 | BUILD FAILURE | `Failures: 3` — `"-"` と**完全に同じ**失敗（`couldn't find resource`） |
+
+**考察**: `length` の値（`"JSON"`／`"-"`／実数値）は本質的な問題ではない。スキーマを通過させても、その先で電文リソース解決に失敗する（`couldn't find resource`）。これは nablarch-testing-yaml のランタイムが電文を固定長としてのみ構築し、JSON電文として処理する仕組みを持たないため。
+→ 報告の **案B（スキーマ緩和のみ）・案E（テストデータの数値調整）では解決不可**、**案A（ランタイム＋スキーマで JSON電文を本サポート）が必須**であることが実機で確定。
+
+### 9.2 総括 — ファイル変換 と 実行時処理 の切り分け
+
+| 段階 | Excel 版 | YAML 版 | 差分の所在 |
+|---|---|---|---|
+| ① ファイル変換（Excel→YAML 書き出し） | （元ファイル） | **可能**。converter が `file-type: JSON` と本文を機械的に出力（YAMLファイルは生成済み） | 差なし（converter は JSON も出力できる） |
+| ② 実行時のスキーマ検証 | 行わない（`BasicTestDataParser`） | **行う**。`length:"JSON"` を弾く（`YamlLoader.java:169,171`） | YAML のみ検証あり |
+| ③ 実行時の電文処理（JSON電文） | **処理できる**。file-type=JSON を本文の文字列全体比較で扱う（`MessagePool.java:170-182`） | **処理できない**。電文を固定長としてのみ構築（`YamlMessageBuilder`/`MessageContent`）し JSON 相当処理なし → `couldn't find resource` | **ここが本質的な差分** |
+| ④ テスト結果 | BUILD SUCCESS（Tests run: 3） | BUILD FAILURE（`length` を schema-valid にしても ③ で失敗） | YAML のみ失敗 |
+
+**結論**: 「Excel は変換できて YAML は変換できない」ではなく（①のファイル変換はどちらも可能）、**Excel版 NTF は JSONフォーマット電文のテストデータを“実行”できるが、YAML版（YamlTestDataParser / nablarch-testing-yaml）は JSON電文の実行時処理に未対応で“実行”できない**。差分は③の実行時ランタイムにあり、`length` 値の調整では解消できない（9.1 で実証）。本リポジトリ（example）側では対応不可で、**案A（framework 側の JSON電文サポート）が必要**。
