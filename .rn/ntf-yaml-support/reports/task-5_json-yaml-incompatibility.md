@@ -54,6 +54,16 @@ JSONフォーマット電文のフィールド定義が `length: "JSON"`（非�
 
 ## 5. Excel と YAML の現状動作の違い
 
+### 5.0 観点別対比（スキーマ検証 / length:"JSON" / JSON電文の比較）
+
+| 観点 | Excel（従来・全パス） | YAML（今回・全エラー） |
+|---|---|---|
+| スキーマ検証 | **行わない**。`BasicTestDataParser` はテストデータに対するJSON Schema検証を持たない | **ロード時に行う**。`YamlLoader#load`（`YamlLoader.java:169` `JSON_SCHEMA.validate`）で検証し、不正なら `:171` で `YamlSchemaValidationException` を送出 → ここで失敗 |
+| `length: "JSON"` | **許容**（JSON電文を表す規約値。バイト長としては使用しない） | **不正**。スキーマ `fields[].length` は `integer`／`^([0-9]+|-)$` 限定（`ntf-testdata-yaml-schema.json:512-528`、pattern :521）のため非数値 `"JSON"` を拒否 |
+| JSON電文の比較 | **本文全体を文字列として比較**。file-type が `Fixed` 以外のとき `MessagePool#compareBody` の `else` 分岐（`MessagePool.java:170-182`、判定 :160-162）で実施。`convertByFileType`（:243-244）が file-type に応じ変換 | **到達不可**。ロード時スキーマ検証で失敗するため比較工程に進めない。かつランタイムは電文を固定長としてのみ構築し（`YamlFileBuilder.java:85-87`／`MessageContent.java:19`／`YamlMessageBuilder.java:125-126`）、JSONを文字列全体として扱う相当処理が無い |
+
+### 5.1 詳細対比
+
 | 観点 | Excel（従来・全パス） | YAML（今回・全エラー） |
 |---|---|---|
 | テストデータ解析 | `BasicTestDataParser`（`nablarch-testing`） | `YamlTestDataParser`（`nablarch-testing-yaml`、`BasicTestDataParser` を継承） |
