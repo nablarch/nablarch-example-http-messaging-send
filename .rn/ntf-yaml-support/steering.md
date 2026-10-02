@@ -77,7 +77,7 @@ NTF（Nablarch Testing Framework）のAI対応として、`nablarch-example-http
 - [x] 変更ファイル（check ファイルおよび steering.md）をコミットする
 - [x] self-check
 - [x] QA expert review (Agent: general-purpose / Opus 4.8)
-- [ ] user review
+- [x] user review（2026-10-02 承認）
 
 **Completion criteria**:
 
@@ -92,22 +92,23 @@ NTF（Nablarch Testing Framework）のAI対応として、`nablarch-example-http
 
 **Steps**:
 
-- [ ] `pom.xml` に `nablarch-testing-yaml:1.0.0-SNAPSHOT`（test scope）を追加する
-- [ ] `pom.xml` に `nablarch-testing-converter:1.0.0-SNAPSHOT`（test scope）を追加する
-- [ ] `unit-test.xml` に `yamlInterpreters` リストと `YamlTestDataParser` コンポーネントを追加する（隣接プロジェクトを参考）
-- [ ] `mvn dependency:resolve` 等で依存関係が解決できることを確認する
+- [x] `pom.xml` に `nablarch-testing-yaml:1.0.0-SNAPSHOT`（test scope）を追加する
+- [x] `pom.xml` の `<build><plugins>` に `nablarch-testing-converter:1.0.0-SNAPSHOT` をビルドプラグイン（plugin直下 configuration に変換パラメータを設定。CLIで convert ゴールを実行）として追加する
+- [x] `unit-test.xml` に `yamlInterpreters` リストと `YamlTestDataParser` コンポーネントを追加する（batch方式）
+- [x] `mvn validate` / `mvn dependency:resolve` / `mvn help:describe`（converter）で解決確認
 - [ ] 変更したファイルをコミットする
-- [ ] self-check
-- [ ] QA expert review (Agent: general-purpose / Opus 4.8)
-- [ ] language expert review (Agent: general-purpose / Opus 4.8)
-- [ ] software-engineering expert review (Agent: general-purpose / Opus 4.8)
+- [x] self-check
+- [x] QA expert review (Agent: general-purpose / Opus 4.8) — 再レビュー実施
+- [x] language expert review (Agent: general-purpose / Opus 4.8) — 再レビュー実施
+- [x] software-engineering expert review (Agent: general-purpose / Opus 4.8) — 再レビュー実施
 - [ ] user review
 
 **Completion criteria**:
 
-- `pom.xml` に `nablarch-testing-yaml:1.0.0-SNAPSHOT` と `nablarch-testing-converter:1.0.0-SNAPSHOT` が test スコープで追加されている
+- `pom.xml` に `nablarch-testing-yaml:1.0.0-SNAPSHOT` が test スコープで追加されている
+- `pom.xml` の `<build><plugins>` に `nablarch-testing-converter:1.0.0-SNAPSHOT` がビルドプラグイン（plugin直下 configuration に変換パラメータを設定。CLIで convert ゴールを実行）として追加されている
 - `unit-test.xml` に `yamlInterpreters` リストと `testDataParser` コンポーネント（`YamlTestDataParser`）が追加されている
-- `mvn dependency:resolve -Dclassifier=test` が成功する（依存関係解決エラーなし）
+- `mvn dependency:resolve` 成功、converter プラグインの `convert` ゴールが `mvn help:describe` で解決できる
 
 ### #3: ExcelテストデータをYAMLに変換
 
@@ -175,6 +176,7 @@ NTF（Nablarch Testing Framework）のAI対応として、`nablarch-example-http
 # Decisions
 
 - **[未決] 同名の `.xls` / `.xlsx` の扱い**: NTF は `.xls` のみ使用し `.xlsx` はシャドウされた未使用ファイル。変換は正データである `.xls` を YAML 化する方針。`.xlsx` は (a) 変換対象外として Task #4 で単純削除する / (b) 変換対象に含めるが出力YAMLが衝突するため不可、のいずれか。→ ユーザーに確認する。
+- **[確定 2026-10-02] nablarch-testing-converter の宣言方式**: ビルドプラグイン（`<build><plugins>`、`convert` ゴール設定付き）とする。test依存にはしない。理由: converter は Maven プラグインでテスト実行時には不要、XLS→YAML 変換時のみ使用。test依存だと convert ゴール短縮形が使えず、POI/snakeyaml 等の推移依存がテストクラスパスに混入するリスク（language/SW 両レビュー指摘）。web/batch テンプレートに準拠。指示書 V1.1 の該当記載も「test依存→ビルドプラグイン」に修正済み。
 
 # State
 
