@@ -151,7 +151,7 @@ NTF（Nablarch Testing Framework）のAI対応として、`nablarch-example-http
 - [x] Excelファイル削除をコミットする（140ae7f）
 - [x] self-check
 - [x] QA expert review (Agent: general-purpose / Opus 4.8) — OK
-- [ ] user review
+- [x] user review（2026-10-02 承認）
 
 **Completion criteria**:
 
@@ -166,31 +166,33 @@ NTF（Nablarch Testing Framework）のAI対応として、`nablarch-example-http
 
 **Prerequisites**: #4
 
+**Status**: ⛔ BLOCKED（JSON電文のYAMLスキーマ非互換で BUILD FAILURE。修正せずユーザー報告。詳細 `checks/task-5.md`・Decisions）
+
 **Steps**:
 
-- [ ] `mvn clean test` が BUILD SUCCESS になることを確認する
-- [ ] テストログで YamlTestDataParser が実際に使われていることを確認する
-- [ ] self-check
-- [ ] QA expert review (Agent: general-purpose / Opus 4.8)
-- [ ] language expert review (Agent: general-purpose / Opus 4.8)
-- [ ] software-engineering expert review (Agent: general-purpose / Opus 4.8)
-- [ ] user review
+- [x] `mvn clean test` を実行 → BUILD FAILURE（Tests run: 3, Errors: 3、YamlSchemaValidationException）
+- [x] テストログで YamlTestDataParser が実際に使われていることを確認する（override ログで確認）
+- [x] self-check — NG（BUILD SUCCESS 未達）
+- [ ] QA expert review（保留。ブロッカー解消後）
+- [ ] language expert review（保留）
+- [ ] software-engineering expert review（保留）
+- [ ] user review（ブロッカー判断待ち）
 
 **Completion criteria**:
 
-- `mvn clean test` が BUILD SUCCESS で終了する（全テストパス、Excel ファイルなし）
-- テストログで YamlTestDataParser が実際に使われていることが確認できる
+- `mvn clean test` が BUILD SUCCESS で終了する（全テストパス、Excel ファイルなし）→ **未達**
+- テストログで YamlTestDataParser が実際に使われていることが確認できる → OK
 
 # Decisions
 
 - **[確定 2026-10-02] 同名の `.xls` / `.xlsx` の扱い（①）**: `.xls` を正データとしてYAML変換し、未使用の `.xlsx` は**変換前に削除**する。根拠: (1) `.xls`/`.xlsx` から独立変換したYAMLがバイト単位で完全一致（`.xlsx` は内容重複、情報損失なし）、(2) converter は同名の `.xls`/`.xlsx` 併存を "same-name Excel books coexist" エラーで拒否するため変換前の削除が必須。`.xlsx` 削除は Task #3 で実施（当初想定の Task #4 から前倒し）。比較エビデンスは `.rn/ntf-yaml-support/xls-xlsx-comparison/` に保存。
-- **[既知の懸念 2026-10-02、検証は Task #5] JSONフォーマット電文のYAMLスキーマ非互換**: 本プロジェクトのテストデータは JSON 電文（`file-type: JSON`、フィールド `length: "JSON"`）を含む。nablarch-testing-yaml のスキーマは `fields[].length` を数値/`-` に限定し JSON 電文を未サポートで、ランタイム（`YamlMessageBuilder`/`MessageContent`）も電文を固定長としてのみ構築する。一方 Excel/NTF（`BasicTestDataParser`→`MessagePool`）はスキーマ検証なし＋JSONは file-type により本文を文字列全体で比較（`MessagePool.java` の `else` 分岐）するため `length="JSON"` を規約として許容していた。よって `YamlTestDataParser` では全3テストが `YamlSchemaValidationException` で失敗する見込み。これは nablarch-testing-yaml（主）＋ converter（従）の JSON電文対応が必要で、example 側では解消不可。**検証と対応判断は Task #5 で実施**（Task #4 は削除のみ）。該当: 生成YAML `response_body_messages`/`expected_request_body_messages` の `length: "JSON"`（testNormalEndExistAllFields.yaml:65,102 / testNormalEndOnlyRequireFields.yaml:65,102 / testAbNormalEnd.yaml:95,106,157,171）。
+- **[ブロッカー確定 2026-10-02、Task #5 で顕在化] JSONフォーマット電文のYAMLスキーマ非互換**: 本プロジェクトのテストデータは JSON 電文（`file-type: JSON`、フィールド `length: "JSON"`）を含む。nablarch-testing-yaml のスキーマは `fields[].length` を数値/`-` に限定し JSON 電文を未サポートで、ランタイム（`YamlMessageBuilder`/`MessageContent`）も電文を固定長としてのみ構築する。一方 Excel/NTF（`BasicTestDataParser`→`MessagePool`）はスキーマ検証なし＋JSONは file-type により本文を文字列全体で比較（`MessagePool.java` の `else` 分岐）するため `length="JSON"` を規約として許容していた。よって `YamlTestDataParser` では全3テストが `YamlSchemaValidationException` で失敗する見込み。これは nablarch-testing-yaml（主）＋ converter（従）の JSON電文対応が必要で、example 側では解消不可。**検証と対応判断は Task #5 で実施**（Task #4 は削除のみ）。該当: 生成YAML `response_body_messages`/`expected_request_body_messages` の `length: "JSON"`（testNormalEndExistAllFields.yaml:65,102 / testNormalEndOnlyRequireFields.yaml:65,102 / testAbNormalEnd.yaml:95,106,157,171）。
 - **[確定 2026-10-02] nablarch-testing-converter の宣言方式**: ビルドプラグイン（`<build><plugins>`、`convert` ゴール設定付き）とする。test依存にはしない。理由: converter は Maven プラグインでテスト実行時には不要、XLS→YAML 変換時のみ使用。test依存だと convert ゴール短縮形が使えず、POI/snakeyaml 等の推移依存がテストクラスパスに混入するリスク（language/SW 両レビュー指摘）。web/batch テンプレートに準拠。指示書 V1.1 の該当記載も「test依存→ビルドプラグイン」に修正済み。
 
 # State
 
-- **Status**: in progress
+- **Status**: ⛔ BLOCKED（Task #5）
 - **Date**: 2026-10-02
-- **Last completed**: #3（承認済み、7f7ccaf）。#4 で `.xls` を削除（削除結果のみ記録）。
-- **Next**: #4 のコミット → QA expert review → user review → #5（Excelなし `mvn clean test`。JSON電文のスキーマ非互換で BUILD FAILURE となる見込み、Decisions 参照）。
+- **Last completed**: #4（承認済み、e53eaa8、`.xls`削除）。#5 で Excelなし `mvn clean test` 実行 → JSON電文のYAMLスキーマ非互換で BUILD FAILURE（Errors: 3）。YamlTestDataParser 使用はログで確認。修正せず報告。
+- **Next**: ブロッカー（JSON電文のYAMLスキーマ未サポート）のユーザー判断待ち。詳細 `checks/task-5.md`・Decisions。選択肢: 1)移行中断しframework要望 / 2)JSON対応版があれば再試行 / 3)converter表現をframeworkへ確認。
 - **Notes**: ブランチ `ntf-yaml-support`（develop 起点）。JSON電文のYAMLスキーマ非互換は既知（Decisions）、検証・判断は Task #5。
