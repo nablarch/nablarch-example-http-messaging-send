@@ -130,7 +130,7 @@ NTF（Nablarch Testing Framework）のAI対応として、`nablarch-example-http
 - [x] 変換したYAMLファイルと `.xlsx` 削除をコミットする（`.xls` 本体はまだ削除しない）（91f32ec）
 - [x] self-check
 - [x] QA expert review (Agent: general-purpose / Opus 4.8) — OK
-- [ ] user review
+- [x] user review（2026-10-02 承認）
 
 **Completion criteria**:
 
@@ -140,23 +140,25 @@ NTF（Nablarch Testing Framework）のAI対応として、`nablarch-example-http
 
 ### #4: Excelを削除する
 
-**Purpose**: 変換対象だった Excel（および未使用の `.xlsx`。扱いは Decisions に従う）を削除してコミットする。
+**Purpose**: 変換対象だった `.xls` を削除してコミットする。
 
 **Prerequisites**: #3
 
 **Steps**:
 
-- [ ] 変換対象となった Excel ファイルを削除する（`.xlsx` の扱いは Decisions の決定に従う）
-- [ ] 結果を `checks/task-4.md` に記録する
-- [ ] Excelファイル削除をコミットする
-- [ ] self-check
-- [ ] QA expert review (Agent: general-purpose / Opus 4.8)
+- [x] 変換対象となった `.xls`（`ProjectSaveMessageActionRequestTest.xls`）を削除する（`src` 配下の Excel 残存 0 件）
+- [x] 削除結果を `checks/task-4.md` に記録する（テスト実行結果は Task #5 で記載）
+- [x] Excelファイル削除をコミットする（140ae7f）
+- [x] self-check
+- [x] QA expert review (Agent: general-purpose / Opus 4.8) — OK
 - [ ] user review
 
 **Completion criteria**:
 
 - 変換対象だった Excel ファイルが削除されている
 - 削除がコミットされている
+
+> Task #5 で Excelなし `mvn clean test` を実施する際、JSON電文のYAMLスキーマ非互換（Decisions 参照）により BUILD FAILURE となる見込み。その検証・判断は Task #5 で行う。
 
 ### #5: YAMLテストデータで全テストをパスさせる
 
@@ -182,12 +184,13 @@ NTF（Nablarch Testing Framework）のAI対応として、`nablarch-example-http
 # Decisions
 
 - **[確定 2026-10-02] 同名の `.xls` / `.xlsx` の扱い（①）**: `.xls` を正データとしてYAML変換し、未使用の `.xlsx` は**変換前に削除**する。根拠: (1) `.xls`/`.xlsx` から独立変換したYAMLがバイト単位で完全一致（`.xlsx` は内容重複、情報損失なし）、(2) converter は同名の `.xls`/`.xlsx` 併存を "same-name Excel books coexist" エラーで拒否するため変換前の削除が必須。`.xlsx` 削除は Task #3 で実施（当初想定の Task #4 から前倒し）。比較エビデンスは `.rn/ntf-yaml-support/xls-xlsx-comparison/` に保存。
+- **[既知の懸念 2026-10-02、検証は Task #5] JSONフォーマット電文のYAMLスキーマ非互換**: 本プロジェクトのテストデータは JSON 電文（`file-type: JSON`、フィールド `length: "JSON"`）を含む。nablarch-testing-yaml のスキーマは `fields[].length` を数値/`-` に限定し JSON 電文を未サポートで、ランタイム（`YamlMessageBuilder`/`MessageContent`）も電文を固定長としてのみ構築する。一方 Excel/NTF（`BasicTestDataParser`→`MessagePool`）はスキーマ検証なし＋JSONは file-type により本文を文字列全体で比較（`MessagePool.java` の `else` 分岐）するため `length="JSON"` を規約として許容していた。よって `YamlTestDataParser` では全3テストが `YamlSchemaValidationException` で失敗する見込み。これは nablarch-testing-yaml（主）＋ converter（従）の JSON電文対応が必要で、example 側では解消不可。**検証と対応判断は Task #5 で実施**（Task #4 は削除のみ）。該当: 生成YAML `response_body_messages`/`expected_request_body_messages` の `length: "JSON"`（testNormalEndExistAllFields.yaml:65,102 / testNormalEndOnlyRequireFields.yaml:65,102 / testAbNormalEnd.yaml:95,106,157,171）。
 - **[確定 2026-10-02] nablarch-testing-converter の宣言方式**: ビルドプラグイン（`<build><plugins>`、`convert` ゴール設定付き）とする。test依存にはしない。理由: converter は Maven プラグインでテスト実行時には不要、XLS→YAML 変換時のみ使用。test依存だと convert ゴール短縮形が使えず、POI/snakeyaml 等の推移依存がテストクラスパスに混入するリスク（language/SW 両レビュー指摘）。web/batch テンプレートに準拠。指示書 V1.1 の該当記載も「test依存→ビルドプラグイン」に修正済み。
 
 # State
 
 - **Status**: in progress
 - **Date**: 2026-10-02
-- **Last completed**: #2 設定変更（承認済み、713f56a）。#3 変換実行中（`.xlsx`削除＋`.xls`→YAML変換・サンプリング比較まで完了、コミット・QAレビュー・user review 残り）
-- **Next**: #3 のコミット → QA expert review → user review
-- **Notes**: ブランチ `ntf-yaml-support`（develop 起点）。全テストは1クラス3件のみ。Q2 は①（`.xlsx`変換前削除）で確定。生成YAMLは比較エビデンス `from-xls` とバイト一致。
+- **Last completed**: #3（承認済み、7f7ccaf）。#4 で `.xls` を削除（削除結果のみ記録）。
+- **Next**: #4 のコミット → QA expert review → user review → #5（Excelなし `mvn clean test`。JSON電文のスキーマ非互換で BUILD FAILURE となる見込み、Decisions 参照）。
+- **Notes**: ブランチ `ntf-yaml-support`（develop 起点）。JSON電文のYAMLスキーマ非互換は既知（Decisions）、検証・判断は Task #5。
