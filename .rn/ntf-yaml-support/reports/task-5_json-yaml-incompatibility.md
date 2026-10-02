@@ -58,9 +58,9 @@ JSONフォーマット電文のフィールド定義が `length: "JSON"`（非�
 
 | 観点 | Excel（従来・全パス） | YAML（今回・全エラー） |
 |---|---|---|
-| スキーマ検証 | **行わない**。`BasicTestDataParser` はテストデータに対するJSON Schema検証を持たない | **ロード時に行う**。`YamlLoader#load`（`YamlLoader.java:169` `JSON_SCHEMA.validate`）で検証し、不正なら `:171` で `YamlSchemaValidationException` を送出 → ここで失敗 |
+| スキーマ検証 | **行わない**。`BasicTestDataParser`（nablarch-testing）はテストデータに対するJSON Schema検証を持たない | **ロード時に行う**。`YamlLoader#load`（`YamlLoader.java:169` `JSON_SCHEMA.validate`）で検証し、不正なら `:171` で `YamlSchemaValidationException` を送出 → ここで失敗 |
 | `length: "JSON"` | **許容**（JSON電文を表す規約値。バイト長としては使用しない） | **不正**。スキーマ `fields[].length` は `integer`／`^([0-9]+|-)$` 限定（`ntf-testdata-yaml-schema.json:512-528`、pattern :521）のため非数値 `"JSON"` を拒否 |
-| JSON電文の比較 | **本文全体を文字列として比較**。file-type が `Fixed` 以外のとき `MessagePool#compareBody` の `else` 分岐（`MessagePool.java:170-182`、判定 :160-162）で実施。`convertByFileType`（:243-244）が file-type に応じ変換 | **到達不可**。ロード時スキーマ検証で失敗するため比較工程に進めない。かつランタイムは電文を固定長としてのみ構築し（`YamlFileBuilder.java:85-87`／`MessageContent.java:19`／`YamlMessageBuilder.java:125-126`）、JSONを文字列全体として扱う相当処理が無い |
+| JSON電文の比較 | **本文全体を文字列として比較**。file-type が `Fixed` 以外のとき `MessagePool#compareBody`（nablarch-testing）の `else` 分岐（`MessagePool.java:170-182`、判定 :160-162）で実施。`convertByFileType`（:243-244）が file-type に応じ変換 | **到達不可**。ロード時スキーマ検証で失敗するため比較工程に進めない。かつランタイムは電文を固定長としてのみ構築し（nablarch-testing-yaml の `YamlFileBuilder.java:85-87`／`MessageContent.java:19`／`YamlMessageBuilder.java:125-126`）、JSONを文字列全体として扱う相当処理が無い |
 
 ### 5.1 詳細対比
 
@@ -69,8 +69,8 @@ JSONフォーマット電文のフィールド定義が `length: "JSON"`（非�
 | テストデータ解析 | `BasicTestDataParser`（`nablarch-testing`） | `YamlTestDataParser`（`nablarch-testing-yaml`、`BasicTestDataParser` を継承） |
 | ロード時のスキーマ検証 | **なし** | **あり**（`YamlLoader.java:169` でJSON Schema検証）→ ここで失敗 |
 | `length="JSON"` の扱い | 規約値として許容（バイト長に未使用） | スキーマ `^([0-9]+|-)$` 違反で不正 |
-| JSON電文の比較方式 | file-type が `Fixed` 以外のとき **本文全体を文字列として比較**（`MessagePool.java:162` の判定で `else` 分岐 `:170-182`）。`convertByFileType`（`:243-244` → `source.convertData`）が file-type に応じ変換 | ロード時点で失敗し到達しない。かつランタイムは電文を固定長としてのみ構築（JSON規約の相当処理なし） |
-| 電文本文のモデル | `FixedLengthDataRecordFormatter`（`MessagePool.java:36`）だが JSON は文字列全体比較で回避 | `FixedLengthFile` 固定（`MessageContent.java:19` 他） |
+| JSON電文の比較方式 | file-type が `Fixed` 以外のとき **本文全体を文字列として比較**（nablarch-testing。`MessagePool.java:162` の判定で `else` 分岐 `:170-182`）。`convertByFileType`（`:243-244` → `source.convertData`）が file-type に応じ変換 | ロード時点で失敗し到達しない。かつランタイムは電文を固定長としてのみ構築（JSON規約の相当処理なし） |
+| 電文本文のモデル | `FixedLengthDataRecordFormatter`（nablarch-testing `MessagePool.java:36`）だが JSON は文字列全体比較で回避 | `FixedLengthFile` 固定（nablarch-testing-yaml `MessageContent.java:19` 他） |
 
 補足: Excel で `.xls` が優先解決されること自体は `nablarch-testing` `PoiXlsReader.java:62-64` によるが、本件の本質は上記の「スキーマ検証の有無」と「JSON電文のモデル化の有無」の差である。
 
@@ -150,8 +150,8 @@ LANG=ja_JP.UTF-8 mvn clean test  # → BUILD FAILURE, Errors: 3, YamlSchemaValid
 | 段階 | Excel 版 | YAML 版 | 差分の所在 |
 |---|---|---|---|
 | ① ファイル変換（Excel→YAML 書き出し） | （元ファイル） | **可能**。converter が `file-type: JSON` と本文を機械的に出力（YAMLファイルは生成済み） | 差なし（converter は JSON も出力できる） |
-| ② 実行時のスキーマ検証 | 行わない（`BasicTestDataParser`） | **行う**。`length:"JSON"` を弾く（`YamlLoader.java:169,171`） | YAML のみ検証あり |
-| ③ 実行時の電文処理（JSON電文） | **処理できる**。file-type=JSON を本文の文字列全体比較で扱う（`MessagePool.java:170-182`） | **処理できない**。電文を固定長としてのみ構築（`YamlMessageBuilder`/`MessageContent`）し JSON 相当処理なし → `couldn't find resource` | **ここが本質的な差分** |
+| ② 実行時のスキーマ検証 | 行わない（`BasicTestDataParser`、nablarch-testing） | **行う**。`length:"JSON"` を弾く（`YamlLoader.java:169,171`） | YAML のみ検証あり |
+| ③ 実行時の電文処理（JSON電文） | **処理できる**。file-type=JSON を本文の文字列全体比較で扱う（nablarch-testing `MessagePool.java:170-182`） | **処理できない**。電文を固定長としてのみ構築（nablarch-testing-yaml `YamlMessageBuilder`/`MessageContent`）し JSON 相当処理なし → `couldn't find resource` | **ここが本質的な差分** |
 | ④ テスト結果 | BUILD SUCCESS（Tests run: 3） | BUILD FAILURE（`length` を schema-valid にしても ③ で失敗） | YAML のみ失敗 |
 
 **結論**: 「Excel は変換できて YAML は変換できない」ではなく（①のファイル変換はどちらも可能）、**Excel版 NTF は JSONフォーマット電文のテストデータを“実行”できるが、YAML版（YamlTestDataParser / nablarch-testing-yaml）は JSON電文の実行時処理に未対応で“実行”できない**。差分は③の実行時ランタイムにあり、`length` 値の調整では解消できない（9.1 で実証）。本リポジトリ（example）側では対応不可で、**案A（framework 側の JSON電文サポート）が必要**。
