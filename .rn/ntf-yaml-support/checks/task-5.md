@@ -1,5 +1,7 @@
 # task-5 Completion Check
 
+> **報告用資料**: 詳細（直接原因・根本原因・Excel/YAML動作差・該当リポジトリ/クラス/メソッド/行・対応案）は `.rn/ntf-yaml-support/reports/task-5_json-yaml-incompatibility.md` を参照。
+
 ## Status: BLOCKED（YAMLスキーマ非互換により BUILD SUCCESS 未達。修正せずユーザー報告）
 
 Excelなしの状態で `mvn clean test`（LANG=ja_JP.UTF-8）を実行した結果、**JSONフォーマット電文のYAMLスキーマ非互換**により全3テストが失敗した。ルールに従い**修正せずユーザーに報告・停止**する。
