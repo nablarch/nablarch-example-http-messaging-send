@@ -115,6 +115,14 @@
       <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
+
+    <!-- nablarch-bom 未登録のため version を明示（SNAPSHOT リリース待ち） -->
+    <dependency>
+      <groupId>com.nablarch.framework</groupId>
+      <artifactId>nablarch-testing-yaml</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -233,6 +241,20 @@
         <configuration>
           <!-- MANIFEST.MFでClass-Pathを指定すると、依存jar内で定義されているtaglibのuriを正しく解決してくれない。 -->
           <useManifestOnlyJar>false</useManifestOnlyJar>
+        </configuration>
+      </plugin>
+      <!-- Excel(.xls/.xlsx)テストデータをYAMLへ変換するツール。nablarch-bom 未登録のため version を明示（SNAPSHOT リリース待ち）。
+           CLI から `mvn com.nablarch.framework:nablarch-testing-converter:convert` で実行する。 -->
+      <plugin>
+        <groupId>com.nablarch.framework</groupId>
+        <artifactId>nablarch-testing-converter</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <configuration>
+          <from>xls</from>
+          <to>yaml</to>
+          <input>${project.basedir}/src/test/java</input>
+          <output>${project.basedir}/src/test/java</output>
+          <overwrite>true</overwrite>
         </configuration>
       </plugin>
     </plugins>

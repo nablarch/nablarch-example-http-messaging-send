@@ -41,3 +41,12 @@
 - Language expert: OK
 - Software-engineering expert: OK（前回NG「converterのtest依存」は解消済み）
 - Ready for user review: Yes（.xls/.xlsx の扱いは Task #3 着手前にユーザー決定）
+
+## 再検証（2回目: 修正適用後）
+
+developベースライン（STEP 0でリセット）から設定を再適用して確認。
+
+| Criterion | Self-check | Evidence |
+|---|---|---|
+| pom に nablarch-testing-yaml(test) / nablarch-testing-converter(build plugin) が追加 | OK | `dependency:resolve` 成功、`help:describe`（converter）で convert ゴール解決。develop比 pom.xml +22 |
+| YAML設定の配置（修正方針） | OK | `yamlInterpreters` と `YamlTestDataParser` 上書きを unit-test.xml ではなく **http-messaging-send-boot.xml（アクション実行時diConfig）** に配置（原因2対応）。unit-test.xml は boot を import するため両経路で有効。develop比 boot +17 / unit-test +4 |
