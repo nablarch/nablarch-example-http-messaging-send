@@ -9,10 +9,6 @@
   <!-- テスティングフレームワークの設定 -->
   <import file="nablarch/test/test-transaction.xml"/>
 
-  <!-- YamlTestDataParser によるtestDataParserの上書きと yamlInterpreters は、
-       リクエスト単体テストのアクション実行時に使われる diConfig（http-messaging-send-boot.xml）側へ移設した。
-       本ファイルは当該 boot を import しているため、ここでの再定義は不要。 -->
-
   <!--
   マスタデータ復旧設定
   マスタデータ復旧を使用する際には、いくつかの手順が必要になります。
