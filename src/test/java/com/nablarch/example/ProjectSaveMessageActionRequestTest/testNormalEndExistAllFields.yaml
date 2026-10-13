@@ -1,0 +1,107 @@
+list_maps:
+  - id: "testShots"
+    rows:
+      - no: "1"
+        description: "メッセージ送信成功"
+        expectedStatusCode: "0"
+        setUpTable: "1"
+        expectedTable: "1"
+        expectedFile: ""
+        expectedLog: ""
+        diConfig: "http-messaging-send-boot.xml"
+        requestPath: "ProjectSaveMessageAction"
+        userId: "batch_user"
+        expectedMessageByClient: "case1"
+        responseMessageByClient: "case1"
+
+setup_tables:
+  - group_id: "1"
+    table: "PROJECT_INS_REQ"
+    rows:
+      - PROJECT_INS_REQ_ID: "1"
+        PROJECT_NAME: "プロジェクト００１"
+        PROJECT_TYPE: "development"
+        PROJECT_CLASS: "s"
+        PROJECT_START_DATE: "20160101"
+        PROJECT_END_DATE: "20180304"
+        CLIENT_ID: "1.0"
+        PROJECT_MANAGER: "鈴木"
+        PROJECT_LEADER: "佐藤"
+        USER_ID: "100.0"
+        NOTE: "備考欄"
+        SALES: "10000"
+        COST_OF_GOODS_SOLD: "1000.0"
+        SGA: "2000.0"
+        ALLOCATION_OF_CORP_EXPENSES: "3000.0"
+        STATUS: "0"
+        INSERT_DATE: "20140203"
+        UPDATE_DATE: "20140203"
+
+response_header_messages:
+  - group_id: "case1"
+    id: "ProjectSaveMessage"
+    directives:
+      file-type: "Fixed"
+      record-separator: "CRLF"
+      text-encoding: "UTF-8"
+    records:
+      - record_type: "no"
+        fields:
+          - {name: "リクエストID", type: "半角", length: "24"}
+          - {name: "再送要求フラグ", type: "半角", length: "1"}
+          - {name: "予備領域", type: "半角", length: "9"}
+        rows:
+          - ["ProjectSaveMessage", "", ""]
+
+response_body_messages:
+  - group_id: "case1"
+    id: "ProjectSaveMessage"
+    directives:
+      file-type: "JSON"
+      text-encoding: "UTF-8"
+    records:
+      - record_type: "no"
+        fields:
+          - {name: "JSON", type: "全半角", length: "-"}
+        rows:
+          - ["{\"statusCode\":\"201\"}"]
+
+expected_tables:
+  - group_id: "1"
+    table: "PROJECT_INS_REQ"
+    rows:
+      - PROJECT_INS_REQ_ID: "1"
+        STATUS: "1"
+        UPDATE_DATE: "${systemTime}"
+
+expected_request_header_messages:
+  - group_id: "case1"
+    id: "ProjectSaveMessage"
+    directives:
+      file-type: "Fixed"
+      record-separator: "CRLF"
+      text-encoding: "UTF-8"
+    records:
+      - record_type: "no"
+        fields:
+          - {name: "リクエストID", type: "半角", length: "400"}
+          - {name: "再送要求フラグ", type: "半角", length: "1"}
+          - {name: "予備領域", type: "半角", length: "9"}
+        rows:
+          - ["ProjectSaveMessage", "0", ""]
+
+expected_request_body_messages:
+  - group_id: "case1"
+    id: "ProjectSaveMessage"
+    directives:
+      file-type: "JSON"
+      text-encoding: "UTF-8"
+    records:
+      - record_type: "no"
+        fields:
+          - {name: "JSON", type: "全半角", length: "-"}
+        rows:
+          - ["{\"projectName\":\"プロジェクト００１\",\"projectType\":\"development\",\"projectClass\":\"\
+  s\",\"projectStartDate\":\"20160101\",\"projectEndDate\":\"20180304\",\"clientId\"\
+  :1,\"projectManager\":\"鈴木\",\"projectLeader\":\"佐藤\",\"note\":\"備考欄\",\"sales\"\
+  :10000,\"costOfGoodsSold\":1000,\"sga\":2000,\"allocationOfCorpExpenses\":3000}"]

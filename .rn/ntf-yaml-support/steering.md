@@ -193,6 +193,6 @@ NTF（Nablarch Testing Framework）のAI対応として、`nablarch-example-http
 
 - **Status**: 🔁 再検証中（修正適用後。developベースラインからTask毎に再実施）
 - **Date**: 2026-10-13
-- **Last completed**: 再検証 STEP 0（資材をdevelopへ戻す, b4358f0）→ STEP 1（Excelベースライン `mvn clean test` 全パス, Tests run: 3）→ STEP 2（YAML設定を再適用, resolve/describe 成功）。
-- **Next**: STEP 3（修正版converterで変換）→ STEP 4（Excel削除）→ STEP 5（Excelなしで `mvn clean test`、旧BLOCKED解消＝BUILD SUCCESS を確認）。
+- **Last completed**: 再検証 STEP 0（資材をdevelopへ戻す, b4358f0）→ STEP 1（Excelベースライン全パス, Tests run: 3）→ STEP 2（YAML設定再適用, 891e406）→ STEP 3（修正版converterで変換、誤変換なし・確定版とバイト一致、`.xlsx`削除）。
+- **Next**: STEP 4（`.xls`削除）→ STEP 5（Excelなしで `mvn clean test`、旧BLOCKED解消＝BUILD SUCCESS を確認）。
 - **Notes**: 旧Task#5のBLOCKED（「JSON電文未サポート」）は誤認。真因は (1) converterの名前行誤認（nablarch-testing-converter 修正済み）, (2) YamlTestDataParser を起動設定(diConfig)に未配置（修正済み）。本再検証はその改善確認。report `task-5_json-yaml-incompatibility.md` の根本原因記述は旧認識のままで要更新。

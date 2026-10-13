@@ -71,3 +71,11 @@ N/A — テストデータ（YAML）の生成のみ。Java/設定コードの変
 - Language expert: N/A
 - Software-engineering expert: N/A
 - Ready for user review: Yes
+
+## 再検証（2回目: 修正版converterで変換）
+
+| Criterion | Self-check | Evidence |
+|---|---|---|
+| 修正版converterで .xls→YAML 変換成功 | OK | `convert` rc=0。警告は既知の挟み込みブロック（挙動保存）のみ |
+| JSON電文の誤変換が解消 | OK | 全YAMLに `length:"JSON"` / `record_type:"file-type"` が無い。JSON電文は `record_type:"no"` / `length:"-"` で生成 |
+| 変換結果の再現性 | OK | 生成4YAML（setUpDb/testAbNormalEnd/testNormalEndExistAllFields/testNormalEndOnlyRequireFields）が確定版コミットとバイト一致 |
