@@ -47,3 +47,19 @@ Excelなしの状態で `mvn clean test`（LANG=ja_JP.UTF-8）を実行した結
 - Self-check: NG（BUILD SUCCESS 未達。JSON電文のYAMLスキーマ非互換）
 - QA / Language / Software-engineering: 保留（ブロッカー解消後に実施）
 - Ready for user review: Yes（ブロッカーのユーザー判断を仰ぐ）
+
+## 再検証（2回目: 修正適用後に BLOCKED 解消）
+
+旧BLOCKEDは「JSON電文未サポート」という**誤認**であり、真因は2点だった:
+(1) nablarch-testing-converter の名前行誤認（単一フィールド電文でディレクティブ行を名前行と誤認）→ converter 側で修正済み。
+(2) `YamlTestDataParser` をアクション実行時の diConfig(`http-messaging-send-boot.xml`)に未配置 → 起動設定へ移設して修正済み。
+
+修正を適用し、developベースラインから再変換・Excel削除のうえ Excelなしで実行:
+
+| Criterion | Self-check | Evidence |
+|---|---|---|
+| mvn clean test が BUILD SUCCESS（Excelなし） | OK | `Tests run: 3, Failures: 0, Errors: 0` / BUILD SUCCESS |
+| YamlTestDataParser が使用されている | OK | override ログが2回（テスト自身のリポジトリ＝unit-test.xml 経由、アクション実行時リポジトリ＝boot.xml 経由）。原因2の修正が有効 |
+| JSON電文のスキーマ検証 | OK | 誤変換解消済みYAML（`length:"-"`）でロード時 `YamlSchemaValidationException` が発生しない |
+
+- 再検証 Overall: OK（旧BLOCKED解消。Excelなしで全テストパス）
