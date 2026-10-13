@@ -60,9 +60,9 @@ response_body_messages:
       file-type: "JSON"
       text-encoding: "UTF-8"
     records:
-      - record_type: "file-type"
+      - record_type: "no"
         fields:
-          - {name: "JSON", type: "UTF-8", length: "JSON"}
+          - {name: "JSON", type: "全半角", length: "-"}
         rows:
           - ["{\"statusCode\":\"201\"}"]
 
@@ -97,9 +97,9 @@ expected_request_body_messages:
       file-type: "JSON"
       text-encoding: "UTF-8"
     records:
-      - record_type: "file-type"
+      - record_type: "no"
         fields:
-          - {name: "JSON", type: "UTF-8", length: "JSON"}
+          - {name: "JSON", type: "全半角", length: "-"}
         rows:
           - ["{\"projectName\":\"プロジェクト００１\",\"projectType\":\"development\",\"projectClass\":\"\
   s\",\"projectStartDate\":\"20160101\",\"projectEndDate\":\"20180304\",\"clientId\"\

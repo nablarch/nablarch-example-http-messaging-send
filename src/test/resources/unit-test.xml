@@ -9,20 +9,9 @@
   <!-- テスティングフレームワークの設定 -->
   <import file="nablarch/test/test-transaction.xml"/>
 
-  <!-- YAMLテストデータ用インタープリタ（QuotationTrimmerを除く）
-       YAMLライブラリがダブルクォートを構文として処理済みで返すため、QuotationTrimmerは不要。 -->
-  <list name="yamlInterpreters">
-    <component-ref name="nullInterpreter"/>
-    <component-ref name="dateTimeInterpreter"/>
-    <component-ref name="lineSeparatorInterpreter"/>
-    <component-ref name="compositeInterpreter"/>
-  </list>
-
-  <!-- YamlTestDataParser でtestDataParserを上書き -->
-  <component name="testDataParser" class="nablarch.test.core.reader.YamlTestDataParser">
-    <property name="dbInfo" ref="dbInfo"/>
-    <property name="interpreters" ref="yamlInterpreters"/>
-  </component>
+  <!-- YamlTestDataParser によるtestDataParserの上書きと yamlInterpreters は、
+       リクエスト単体テストのアクション実行時に使われる diConfig（http-messaging-send-boot.xml）側へ移設した。
+       本ファイルは当該 boot を import しているため、ここでの再定義は不要。 -->
 
   <!--
   マスタデータ復旧設定
