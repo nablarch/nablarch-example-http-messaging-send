@@ -27,3 +27,9 @@ N/A — Excelファイルの削除のみ。Java/設定コードの変更なし�
 - Ready for user review: Yes
 
 > 注: Excelなしでのテスト実行（`mvn clean test`）の結果は Task #5 で確認・記載する。
+
+## 再検証（2回目）
+
+| Criterion | Self-check | Evidence |
+|---|---|---|
+| 変換元 `.xls` を削除 | OK | `git rm` 済み。`src` 配下に `.xls`/`.xlsx` 残存 0 件（Excelなし状態） |
