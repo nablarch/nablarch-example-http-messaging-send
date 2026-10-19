@@ -1,5 +1,7 @@
 # task-5 Completion Check
 
+> **訂正（2026-10-19）**: 下記の BLOCKED（「JSON電文のYAMLスキーマ非互換」）は誤認で、2026-10-13 の再検証で解消済み（Excelなしで `Tests run: 3` 全パス）。真因と検証結果は末尾の「再検証（2回目）」節と、報告用資料の §0 を参照。本ファイルの以下の本文は時点の記録として残す。
+
 > **報告用資料**: 詳細（直接原因・根本原因・Excel/YAML動作差・該当リポジトリ/クラス/メソッド/行・対応案）は `.rn/ntf-yaml-support/reports/task-5_json-yaml-incompatibility.md` を参照。
 
 ## Status: BLOCKED（YAMLスキーマ非互換により BUILD SUCCESS 未達。修正せずユーザー報告）

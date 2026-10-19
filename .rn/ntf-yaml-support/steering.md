@@ -9,7 +9,8 @@ NTF（Nablarch Testing Framework）のAI対応として、`nablarch-example-http
 - `develop` ブランチから作成した `ntf-yaml-support` ブランチで全作業が行われている
 - 作業前に既存の全テストがパスすることを確認済みである
 - `pom.xml` に `nablarch-testing-yaml:1.0.0-SNAPSHOT` と `nablarch-testing-converter:1.0.0-SNAPSHOT` の依存関係が追加されている（スコープ: test）
-- `src/test/resources/unit-test.xml` に `YamlTestDataParser` コンポーネントと `yamlInterpreters` リストが追加されている
+- `YamlTestDataParser` コンポーネントと `yamlInterpreters` リストが、アクション実行時の diConfig である `src/test/resources/http-messaging-send-boot.xml` に追加されている（`unit-test.xml` は boot を import するため、テスト自身のリポジトリにも効く）
+  - 当初は `unit-test.xml` への追加としていたが、アクション実行中の同期送信モックが diConfig 側のリポジトリから `testDataParser` を引くため、boot 側への配置に改めた（2026-10-13 再検証。Decisions 参照）
 - 変換対象の全てのテスト用ExcelファイルがそれぞれYAMLファイルに変換されている（サンプリングでExcelとYAMLの内容が一致することを確認済み）
 - 変換後、変換対象だったExcelファイルが全て削除されている
 - YAMLテストデータを使った状態で全テストがパスしている
@@ -101,6 +102,7 @@ NTF（Nablarch Testing Framework）のAI対応として、`nablarch-example-http
 - [x] `unit-test.xml` に `yamlInterpreters` リストと `YamlTestDataParser` コンポーネントを追加する（batch方式）
 - [x] `mvn validate` / `mvn dependency:resolve` / `mvn help:describe`（converter）で解決確認
 - [x] 変更したファイルをコミットする（713f56a）
+- [x] 再検証（2026-10-13）: develop ベースラインから設定を再適用し、`YamlTestDataParser` と `yamlInterpreters` を `http-messaging-send-boot.xml` に配置する（891e406。`checks/task-2.md`「再検証（2回目）」）
 - [x] self-check
 - [x] QA expert review (Agent: general-purpose / Opus 4.8) — OK
 - [x] language expert review (Agent: general-purpose / Opus 4.8) — OK
@@ -111,7 +113,7 @@ NTF（Nablarch Testing Framework）のAI対応として、`nablarch-example-http
 
 - `pom.xml` に `nablarch-testing-yaml:1.0.0-SNAPSHOT` が test スコープで追加されている
 - `pom.xml` の `<build><plugins>` に `nablarch-testing-converter:1.0.0-SNAPSHOT` がビルドプラグイン（plugin直下 configuration に変換パラメータを設定。CLIで convert ゴールを実行）として追加されている
-- `unit-test.xml` に `yamlInterpreters` リストと `testDataParser` コンポーネント（`YamlTestDataParser`）が追加されている
+- `http-messaging-send-boot.xml` に `yamlInterpreters` リストと `testDataParser` コンポーネント（`YamlTestDataParser`）が追加されている（2026-10-13 再検証で `unit-test.xml` から移設）
 - `mvn dependency:resolve` 成功、converter プラグインの `convert` ゴールが `mvn help:describe` で解決できる
 
 ### #3: ExcelテストデータをYAMLに変換
@@ -128,6 +130,7 @@ NTF（Nablarch Testing Framework）のAI対応として、`nablarch-example-http
 - [x] 変換後、ExcelとYAMLの内容をサンプリングで比較し一致を確認する（各YAML 3件以上。setUpDbは空）
 - [x] サンプリング比較結果を `checks/task-3.md` に記録する
 - [x] 変換したYAMLファイルと `.xlsx` 削除をコミットする（`.xls` 本体はまだ削除しない）（91f32ec）
+- [x] 再検証（2026-10-13）: 修正版 converter（nablarch-testing-converter `7a97049`）で再変換する（a4011c4。JSON 電文の誤変換が解消。`checks/task-3.md`「再検証（2回目）」）
 - [x] self-check
 - [x] QA expert review (Agent: general-purpose / Opus 4.8) — OK
 - [x] user review（2026-10-02 承認）
@@ -149,6 +152,7 @@ NTF（Nablarch Testing Framework）のAI対応として、`nablarch-example-http
 - [x] 変換対象となった `.xls`（`ProjectSaveMessageActionRequestTest.xls`）を削除する（`src` 配下の Excel 残存 0 件）
 - [x] 削除結果を `checks/task-4.md` に記録する（テスト実行結果は Task #5 で記載）
 - [x] Excelファイル削除をコミットする（140ae7f）
+- [x] 再検証（2026-10-13）: 再変換後に `.xls` を削除する（e6f06e6。`checks/task-4.md`「再検証（2回目）」）
 - [x] self-check
 - [x] QA expert review (Agent: general-purpose / Opus 4.8) — OK
 - [x] user review（2026-10-02 承認）
@@ -158,7 +162,7 @@ NTF（Nablarch Testing Framework）のAI対応として、`nablarch-example-http
 - 変換対象だった Excel ファイルが削除されている
 - 削除がコミットされている
 
-> Task #5 で Excelなし `mvn clean test` を実施する際、JSON電文のYAMLスキーマ非互換（Decisions 参照）により BUILD FAILURE となる見込み。その検証・判断は Task #5 で行う。
+> ~~Task #5 で Excelなし `mvn clean test` を実施する際、JSON電文のYAMLスキーマ非互換（Decisions 参照）により BUILD FAILURE となる見込み。~~ → 誤認だった（2026-10-19 訂正）。2026-10-13 の再検証で Task #5 は BUILD SUCCESS。
 
 ### #5: YAMLテストデータで全テストをパスさせる
 
@@ -166,33 +170,37 @@ NTF（Nablarch Testing Framework）のAI対応として、`nablarch-example-http
 
 **Prerequisites**: #4
 
-**Status**: ⛔ BLOCKED（JSON電文のYAMLスキーマ非互換で BUILD FAILURE。修正せずユーザー報告。詳細 `checks/task-5.md`・Decisions）
+**Status**: ✅ 解消（2026-10-13 再検証で BUILD SUCCESS）。旧 BLOCKED（「JSON電文のYAMLスキーマ非互換」）は誤認で、真因は converter の名前行誤認と diConfig への YAML パーサ未配置（Decisions・`reports/task-5_json-yaml-incompatibility.md` §0）
 
 **Steps**:
 
-- [x] `mvn clean test` を実行 → BUILD FAILURE（Tests run: 3, Errors: 3、YamlSchemaValidationException）
+- [x] `mvn clean test` を実行 → BUILD FAILURE（Tests run: 3, Errors: 3、YamlSchemaValidationException）（初回 2026-10-02）
 - [x] テストログで YamlTestDataParser が実際に使われていることを確認する（override ログで確認）
-- [x] self-check — NG（BUILD SUCCESS 未達）
-- [ ] QA expert review（保留。ブロッカー解消後）
-- [ ] language expert review（保留）
-- [ ] software-engineering expert review（保留）
-- [ ] user review（ブロッカー判断待ち）
+- [x] self-check — NG（BUILD SUCCESS 未達）（初回）
+- [x] 再検証（2026-10-13）: 修正適用後、Excelなしで `mvn clean test` → BUILD SUCCESS（Tests run: 3, Failures: 0, Errors: 0）（e8fcdda）
+- [x] self-check（再検証）— OK
+- [x] QA expert review（再検証）— OK
+- [ ] language expert review — 再検証では未実施（`checks/task-5.md` で N/A）
+- [ ] software-engineering expert review — 再検証では未実施（`checks/task-5.md` で N/A）
+- [x] 報告資料 `reports/task-5_json-yaml-incompatibility.md` に訂正（§0）を追記する（2026-10-19）
+- [ ] user review
 
 **Completion criteria**:
 
-- `mvn clean test` が BUILD SUCCESS で終了する（全テストパス、Excel ファイルなし）→ **未達**
+- `mvn clean test` が BUILD SUCCESS で終了する（全テストパス、Excel ファイルなし）→ **OK**（2026-10-13 再検証。初回 2026-10-02 は未達）
 - テストログで YamlTestDataParser が実際に使われていることが確認できる → OK
 
 # Decisions
 
 - **[確定 2026-10-02] 同名の `.xls` / `.xlsx` の扱い（①）**: `.xls` を正データとしてYAML変換し、未使用の `.xlsx` は**変換前に削除**する。根拠: (1) `.xls`/`.xlsx` から独立変換したYAMLがバイト単位で完全一致（`.xlsx` は内容重複、情報損失なし）、(2) converter は同名の `.xls`/`.xlsx` 併存を "same-name Excel books coexist" エラーで拒否するため変換前の削除が必須。`.xlsx` 削除は Task #3 で実施（当初想定の Task #4 から前倒し）。比較エビデンスは `.rn/ntf-yaml-support/xls-xlsx-comparison/` に保存。
-- **[ブロッカー確定 2026-10-02、Task #5 で顕在化] JSONフォーマット電文のYAMLスキーマ非互換**: 本プロジェクトのテストデータは JSON 電文（`file-type: JSON`、フィールド `length: "JSON"`）を含む。nablarch-testing-yaml のスキーマは `fields[].length` を数値/`-` に限定し JSON 電文を未サポートで、ランタイム（`YamlMessageBuilder`/`MessageContent`）も電文を固定長としてのみ構築する。一方 Excel/NTF（`BasicTestDataParser`→`MessagePool`）はスキーマ検証なし＋JSONは file-type により本文を文字列全体で比較（`MessagePool.java` の `else` 分岐）するため `length="JSON"` を規約として許容していた。よって `YamlTestDataParser` では全3テストが `YamlSchemaValidationException` で失敗する見込み。これは nablarch-testing-yaml（主）＋ converter（従）の JSON電文対応が必要で、example 側では解消不可。**検証と対応判断は Task #5 で実施**（Task #4 は削除のみ）。該当: 生成YAML `response_body_messages`/`expected_request_body_messages` の `length: "JSON"`（testNormalEndExistAllFields.yaml:65,102 / testNormalEndOnlyRequireFields.yaml:65,102 / testAbNormalEnd.yaml:95,106,157,171）。
+- **[訂正 2026-10-19] JSON 電文テストの失敗の真因**: 下の「JSONフォーマット電文のYAMLスキーマ非互換」は誤認。真因は (1) nablarch-testing-converter が単一フィールド電文でディレクティブ行 `file-type | JSON` を名前行と誤認し、壊れた YAML（`record_type: "file-type"`／`length: "JSON"`）を出力していたこと（converter `7a97049` で修正）、(2) リクエスト単体テストではアクション実行時に diConfig（`http-messaging-send-boot.xml`）でリポジトリが作り直され、同期送信モック `RequestTestingMessagingClient` がそこから `testDataParser` を引くのに、`YamlTestDataParser` を `unit-test.xml` にしか置いていなかったこと（`70fe87a` で boot へ移設）。framework（nablarch-testing-yaml）の改修は不要で、Excel 版と同じく file-type が `Fixed` 以外なら本文全体を文字列比較する本体コード（`MessagePool`）を YAML 版も通る。2026-10-13 再検証（`b4358f0`〜`e8fcdda`）で Excel なし 3/3 成功。報告資料の案A〜E（framework 改修要望・Excel 継続など）は取り下げ。詳細は `reports/task-5_json-yaml-incompatibility.md` §0。
+- ~~**[ブロッカー確定 2026-10-02、Task #5 で顕在化] JSONフォーマット電文のYAMLスキーマ非互換**~~（誤認。上の訂正を参照）: 本プロジェクトのテストデータは JSON 電文（`file-type: JSON`、フィールド `length: "JSON"`）を含む。nablarch-testing-yaml のスキーマは `fields[].length` を数値/`-` に限定し JSON 電文を未サポートで、ランタイム（`YamlMessageBuilder`/`MessageContent`）も電文を固定長としてのみ構築する。一方 Excel/NTF（`BasicTestDataParser`→`MessagePool`）はスキーマ検証なし＋JSONは file-type により本文を文字列全体で比較（`MessagePool.java` の `else` 分岐）するため `length="JSON"` を規約として許容していた。よって `YamlTestDataParser` では全3テストが `YamlSchemaValidationException` で失敗する見込み。これは nablarch-testing-yaml（主）＋ converter（従）の JSON電文対応が必要で、example 側では解消不可。**検証と対応判断は Task #5 で実施**（Task #4 は削除のみ）。該当: 生成YAML `response_body_messages`/`expected_request_body_messages` の `length: "JSON"`（testNormalEndExistAllFields.yaml:65,102 / testNormalEndOnlyRequireFields.yaml:65,102 / testAbNormalEnd.yaml:95,106,157,171）。
 - **[確定 2026-10-02] nablarch-testing-converter の宣言方式**: ビルドプラグイン（`<build><plugins>`、`convert` ゴール設定付き）とする。test依存にはしない。理由: converter は Maven プラグインでテスト実行時には不要、XLS→YAML 変換時のみ使用。test依存だと convert ゴール短縮形が使えず、POI/snakeyaml 等の推移依存がテストクラスパスに混入するリスク（language/SW 両レビュー指摘）。web/batch テンプレートに準拠。指示書 V1.1 の該当記載も「test依存→ビルドプラグイン」に修正済み。
 
 # State
 
 - **Status**: ✅ DONE（再検証完了。修正適用でYAML化が成功＝旧BLOCKED解消）
-- **Date**: 2026-10-13
+- **Date**: 2026-10-19
 - **Last completed**: 再検証 STEP 0（b4358f0）→ STEP 1（Excelベースライン全パス）→ STEP 2（設定再適用, 891e406）→ STEP 3（変換, 89d7d38）→ STEP 4（`.xls`削除, e6f06e6）→ STEP 5（Excelなし `mvn clean test` = BUILD SUCCESS, Tests run: 3）。
-- **Next**: 全task完了。user review（まとめて）待ち。report `task-5_json-yaml-incompatibility.md` の根本原因記述の更新要否を別途判断。
-- **Notes**: 旧Task#5のBLOCKED（「JSON電文未サポート」）は誤認。真因は (1) converterの名前行誤認（nablarch-testing-converter 修正済み）, (2) YamlTestDataParser を起動設定(diConfig)に未配置（修正済み）。本再検証はその改善確認。report `task-5_json-yaml-incompatibility.md` の根本原因記述は旧認識のままで要更新。
+- **Next**: 全task完了。user review（まとめて）待ち。
+- **Notes**: 旧Task#5のBLOCKED（「JSON電文未サポート」）は誤認。真因は (1) converterの名前行誤認（nablarch-testing-converter `7a97049` で修正済み・未 push）, (2) YamlTestDataParser を起動設定(diConfig)に未配置（修正済み）。本再検証はその改善確認。2026-10-19: steering・`checks/task-5.md` 冒頭・report `task-5_json-yaml-incompatibility.md`（§0 訂正を追加）を再検証結果に合わせて更新した。`http-messaging-send-boot.xml` の `yamlInterpreters` に NullInterpreter / LineSeparatorInterpreter が残っている件は別途対応（全 Example 共通の課題として別セッションで扱う）。push はユーザー側で行う。

@@ -1,8 +1,51 @@
-# 報告資料: NTF YAML移行における JSONフォーマット電文の非互換（nablarch-example-http-messaging-send）
+# 報告資料: NTF YAML移行における JSONフォーマット電文テストの失敗（nablarch-example-http-messaging-send）
 
 - 作成日: 2026-10-02
+- 訂正日: 2026-10-19（§0 を追加。§1〜§9 は 2026-10-02 時点の旧認識として残す）
 - 対象ブランチ: `ntf-yaml-support`（`nablarch-example-http-messaging-send`、コミット `4ddd360`）
 - 事象発生タスク: Task #5（Excelなしで `mvn clean test` を実行し全テストパスを確認する工程）
+
+## 0. 訂正（2026-10-19）— 旧認識「nablarch-testing-yaml が JSON 電文を未サポート」は誤り
+
+**§1〜§9 の根本原因・対応案は誤認であり、採用しない。** 真因は次の 2 点で、どちらも修正済み。framework（nablarch-testing-yaml）の改修は不要。
+
+### 0.1 真因
+
+| # | 真因 | 所在 | 修正 |
+|---|---|---|---|
+| 1 | **converter が名前行を取り違えていた。** `XlsFormatReader#skipToFirstNameRow` は「先頭セルを除いた残りがフィールド名一覧と一致する最初の行」を名前行としていた。フィールドが `JSON` の 1 つだけの電文では、ディレクティブ行 `file-type \| JSON` の残り `[JSON]` がフィールド名と一致し、これを名前行と誤認。続く `text-encoding \| UTF-8` を型行、`no \| JSON` を長さ行と読んだため、`record_type: "file-type"`／`type: "UTF-8"`／`length: "JSON"` という壊れた YAML が出力された | nablarch-testing-converter | `7a97049`（先頭セルがディレクティブ名の行を名前行の候補から除外。NTF 本体と同じ判断） |
+| 2 | **アクション実行時の diConfig に YAML 用パーサが無かった。** リクエスト単体テストでは、アクション実行のたびにテストショットの `diConfig`（`http-messaging-send-boot.xml`）でリポジトリが作り直される。同期送信のモック `RequestTestingMessagingClient` はそのリポジトリから `testDataParser` を引くため、`unit-test.xml` にだけ `YamlTestDataParser` を置いていた状態では Excel 用パーサのまま削除済み `.xls` を探していた | 本リポジトリ（設定） | `70fe87a`（`YamlTestDataParser` と `yamlInterpreters` を `http-messaging-send-boot.xml` へ移設。`unit-test.xml` は boot を import するので両方の経路に効く） |
+
+- §2 のスキーマ検証エラーは、真因 1 で壊れた YAML をスキーマが正しく拒否したもの。スキーマ側に問題は無い。
+- §9.1 の実験（`length` を `"-"`／実バイト長に書き換え）が `couldn't find resource` で失敗したのは真因 2 による。スタックトレース（`reports/logs/task-5-experiment-length-dash-failure.log`）は `RequestTestingMessagingClient.sendSync` → `createReceivedMessage` → `RequestTestingSendSyncSupport.getMessages` → `TestSupport.getPathOf` であり、アクション実行中のモックが Excel を探していたことを示す。JSON 電文の扱いとは無関係で、「ランタイムが JSON 未対応」という §9 の結論は実験の前提（真因 2 が残った状態）を取り違えたもの。
+- JSON 電文の実行時処理について: Excel 版 NTF も JSON 電文を「`file-type: JSON` のディレクティブを持つ、フィールド 1 つ・長さ `-` の固定長データ」として読み、比較時に file-type が `Fixed` 以外なら本文全体を文字列比較する（nablarch-testing `MessagePool`）。YAML 読み込みはディレクティブをそのまま渡すので、その先は Excel 版と同じ本体コードを通る。YAML 側に JSON 専用の実装は要らない（下の 0.2 で実証）。
+
+### 0.2 修正後の検証（2026-10-13 再検証）
+
+develop ベースラインへ戻し（`b4358f0`）、修正版 converter で設定・変換・削除をやり直した。
+
+| STEP | 内容 | コミット | 結果 |
+|---|---|---|---|
+| 2 | pom / unit-test.xml / http-messaging-send-boot.xml に YAML 対応設定 | `891e406` | — |
+| 3 | 修正版 converter（`7a97049`）で `.xls` → YAML | `a4011c4` | JSON 電文は `record_type: "no"`／`length: "-"`、`directives.file-type: "JSON"` で出力。`length: "JSON"`／`record_type: "file-type"` は 0 件 |
+| 4 | 変換元 `.xls` を削除 | `e6f06e6` | `src` 配下の Excel 0 件 |
+| 5 | Excel なしで `LANG=ja_JP.UTF-8 mvn clean test` | `e8fcdda` | `Tests run: 3, Failures: 0, Errors: 0` / BUILD SUCCESS。`YamlTestDataParser` の override ログが 2 経路（unit-test.xml 経由・boot 経由）で出力 |
+
+### 0.3 対応案の扱い
+
+- §7 の案A（framework に JSON 電文サポートを追加）・案B・案C・案E は**不要につき取り下げ**。
+- 案D（本プロジェクトは Excel 継続）も**取り下げ**。YAML 移行は完了している。
+- 移行手順書には「同期送信のモック（`RequestTestingMessagingClient`／`RequestTestingMessagingProvider`）を使う場合は、diConfig の起動用 XML にも `YamlTestDataParser` の上書きが必要」を追記する（nablarch-example-mom-sync-send-batch の事象と同じ）。
+
+### 0.4 教訓
+
+- スキーマ検証エラーは、まず入力（converter の出力）が壊れていないかを疑う。
+- 同じ `couldn't find resource` でも、`RequestTestingMessagingClient` 経由ならアクション実行中、つまり diConfig 側の設定の問題。
+- 実験は変数を 1 つずつ変え、別のエラーに変わったときは、その原因が同じ軸か確かめてから結論を出す。
+
+---
+
+> **以下 §1〜§9 は 2026-10-02 時点の旧認識（誤り）。経緯の記録として残す。**
 
 ## 1. サマリ
 

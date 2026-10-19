@@ -1,0 +1,208 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----< com.nablarch.example:nablarch-example-http-messaging-send >------
+[INFO] Building nablarch-example-http-messaging-send 6-NEXT-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ nablarch-example-http-messaging-send ---
+[INFO] Deleting /home/k10949/workspace/nablarch-example-http-messaging-send/target
+[INFO] 
+[INFO] --- build-helper:3.6.0:add-source (default) @ nablarch-example-http-messaging-send ---
+[INFO] Source directory: /home/k10949/workspace/nablarch-example-http-messaging-send/target/generated-sources/entity added.
+[INFO] 
+[INFO] --- gsp-dba:5.2.0:generate-ddl (gsp) @ nablarch-example-http-messaging-send ---
+[WARNING] 1 problem was encountered while building the effective model for org.seasar.container:s2jdbc-gen:jar:2.4.46 during dependency collection step for plugin (use -X to see details)
+[INFO] 
+[INFO] --- gsp-dba:5.2.0:execute-ddl (gsp) @ nablarch-example-http-messaging-send ---
+[INFO] 101 of 101 SQL statements executed successfully
+[INFO] 
+[INFO] --- gsp-dba:5.2.0:load-data (gsp) @ nablarch-example-http-messaging-send ---
+[INFO] 取込を開始します:BATCH_REQUEST.csv
+[INFO] 取込を開始します:BUSINESS_DATE.csv
+[INFO] 取込を開始します:PROJECT_INS_REQ.csv
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ nablarch-example-http-messaging-send ---
+[INFO] Copying 11 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ nablarch-example-http-messaging-send ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 2 source files with javac [debug target 17] to target/classes
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ nablarch-example-http-messaging-send ---
+[INFO] Copying 6 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ nablarch-example-http-messaging-send ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug target 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.0:test (default-test) @ nablarch-example-http-messaging-send ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.nablarch.example.ProjectSaveMessageActionRequestTest
+2026-10-08 15:40:23.621 -INFO- null [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] initialized.
+	LOGGER = [SQL] NAME REGEX = [SQL] LEVEL = [TRACE]
+	LOGGER = [ROO] NAME REGEX = [.*] LEVEL = [DEBUG]
+2026-10-08 15:40:23.628 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:unit-test.xml
+2026-10-08 15:40:23.673 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:http-messaging-send-boot.xml
+2026-10-08 15:40:23.678 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:http-messaging-send.xml
+2026-10-08 15:40:23.687 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/schema-config.xml
+2026-10-08 15:40:23.695 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/batch/db-for-batch.xml
+2026-10-08 15:40:23.700 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/core/db-base.xml
+2026-10-08 15:40:23.705 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/core/db/db-transaction.xml
+2026-10-08 15:40:23.720 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/core/db/connection-factory-datasource.xml
+2026-10-08 15:40:23.725 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/core/db/db-statement-factory.xml
+2026-10-08 15:40:23.729 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/core/db/db-field-annotation.xml
+2026-10-08 15:40:23.732 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/core/date/system-date.xml
+2026-10-08 15:40:23.738 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/core/date.xml
+2026-10-08 15:40:23.741 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/core/date/business-date.xml
+2026-10-08 15:40:23.747 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/core/date/system-date.xml
+2026-10-08 15:40:23.770 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/core/db/db-access-exception-factory.xml
+2026-10-08 15:40:23.779 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:data-source.xml
+2026-10-08 15:40:23.807 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/batch/filepath-for-batch.xml
+2026-10-08 15:40:23.812 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/batch/threadcontext-for-batch.xml
+2026-10-08 15:40:23.820 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/common/standalone/process-stop.xml
+2026-10-08 15:40:23.831 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/common/standalone/commit-log.xml
+2026-10-08 15:40:23.838 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/common/standalone/multi-thread.xml
+2026-10-08 15:40:23.841 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/common/standalone/commit-log.xml
+2026-10-08 15:40:23.847 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/batch/loop-transaction.xml
+2026-10-08 15:40:23.852 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/batch/batch-data-read.xml
+2026-10-08 15:40:23.883 -WARN- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] component property was overridden. component name = commitLogger, property = interval
+2026-10-08 15:40:23.883 -WARN- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] component property was overridden. component name = filePathSetting, property = basePathSettings
+2026-10-08 15:40:23.883 -WARN- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] component property was overridden. component name = filePathSetting, property = fileExtensions
+2026-10-08 15:40:23.885 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/core/date_test.xml
+2026-10-08 15:40:23.894 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/test/test-data.xml
+2026-10-08 15:40:23.898 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/test/test-data-interpreter.xml
+2026-10-08 15:40:23.927 -WARN- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] override component classname was not matched.  replace all component configuration.  component name = systemTimeProvider, defined component definition classname = nablarch.core.date.BasicSystemTimeProvider, override component definition classname = nablarch.test.FixedSystemTimeProvider
+2026-10-08 15:40:23.927 -WARN- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] override component classname was not matched.  replace all component configuration.  component name = businessDateProvider, defined component definition classname = nablarch.core.date.BasicBusinessDateProvider, override component definition classname = nablarch.test.FixedBusinessDateProvider
+2026-10-08 15:40:23.928 -WARN- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] override component classname was not matched.  replace all component configuration.  component name = defaultMessageSenderClient, defined component definition classname = nablarch.fw.messaging.realtime.http.client.HttpMessagingClient, override component definition classname = nablarch.test.core.messaging.RequestTestingMessagingClient
+2026-10-08 15:40:23.928 -WARN- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] component property was overridden. component name = initializer, property = initializeList
+2026-10-08 15:40:23.929 -DEBUG- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load component config file. file = classpath:nablarch/test/test-transaction.xml
+2026-10-08 15:40:23.935 -WARN- nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] override component classname was not matched.  replace all component configuration.  component name = testDataParser, defined component definition classname = nablarch.test.core.reader.BasicTestDataParser, override component definition classname = nablarch.test.core.reader.YamlTestDataParser
+2026-10-08 15:40:23.942 -DEBUG- nablarch.core.repository.ConfigFileLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load environment config file. file = classpath:nablarch/schema/batch-request-table-schema.config
+2026-10-08 15:40:23.945 -DEBUG- nablarch.core.repository.ConfigFileLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load environment config file. file = classpath:nablarch/schema/business-date-table-schema.config
+2026-10-08 15:40:23.946 -DEBUG- nablarch.core.repository.ConfigFileLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load environment config file. file = classpath:nablarch/schema/code-table-schema.config
+2026-10-08 15:40:23.948 -DEBUG- nablarch.core.repository.ConfigFileLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load environment config file. file = classpath:nablarch/schema/idgenerator-table-schema.config
+2026-10-08 15:40:23.949 -DEBUG- nablarch.core.repository.ConfigFileLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load environment config file. file = classpath:nablarch/schema/mail-table-schema.config
+2026-10-08 15:40:23.950 -DEBUG- nablarch.core.repository.ConfigFileLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load environment config file. file = classpath:nablarch/schema/message-table-schema.config
+2026-10-08 15:40:23.951 -DEBUG- nablarch.core.repository.ConfigFileLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load environment config file. file = classpath:nablarch/schema/permission-check-table-schema.config
+2026-10-08 15:40:23.952 -DEBUG- nablarch.core.repository.ConfigFileLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load environment config file. file = classpath:nablarch/schema/request-table-schema.config
+2026-10-08 15:40:23.953 -DEBUG- nablarch.core.repository.PropertiesFileLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load environment properties file. file = classpath:common.properties
+2026-10-08 15:40:23.954 -DEBUG- nablarch.core.repository.PropertiesFileLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load environment properties file. file = classpath:env.properties
+2026-10-08 15:40:23.955 -DEBUG- nablarch.core.repository.PropertiesFileLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load environment properties file. file = classpath:messaging/messaging.properties
+2026-10-08 15:40:23.956 -DEBUG- nablarch.core.repository.ConfigFileLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load environment config file. file = classpath:nablarch/core/date_test.config
+2026-10-08 15:40:23.957 -DEBUG- nablarch.core.repository.ConfigFileLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load environment config file. file = classpath:nablarch/test/test-data-interpreter.config
+2026-10-08 15:40:23.958 -DEBUG- nablarch.core.repository.ConfigFileLoader [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] load environment config file. file = classpath:nablarch/test/test-data.config
+2026-10-08 15:40:23.986 -DEBUG- com.zaxxer.hikari.HikariConfig [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] Driver class org.h2.Driver found in Thread context class loader jdk.internal.loader.ClassLoaders$AppClassLoader@30946e09
+2026-10-08 15:40:23.998 -INFO- nablarch.test.core.reader.YamlTestDataParser [null] boot_proc = [] proc_sys = [] req_id = [null] usr_id = [null] YamlTestDataParser does not use TestDataReader; the injected value is ignored.
+[ERROR] Tests run: 3, Failures: 0, Errors: 3, Skipped: 0, Time elapsed: 1.961 s <<< FAILURE! -- in com.nablarch.example.ProjectSaveMessageActionRequestTest
+[ERROR] com.nablarch.example.ProjectSaveMessageActionRequestTest.testNormalEndExistAllFields -- Time elapsed: 1.144 s <<< ERROR!
+nablarch.test.core.reader.yaml.YamlSchemaValidationException: 
+YAML file failed schema validation: src/test/java/com/nablarch/example/ProjectSaveMessageActionRequestTest/testNormalEndExistAllFields.yaml
+$.expected_request_body_messages[0].records[0].fields[0].length: string が見つかりました、integer が予期されました
+$.expected_request_body_messages[0].records[0].fields[0].length: 正規表現パターン ^([0-9]+|-)$ に一致しません
+$.response_body_messages[0].records[0].fields[0].length: string が見つかりました、integer が予期されました
+$.response_body_messages[0].records[0].fields[0].length: 正規表現パターン ^([0-9]+|-)$ に一致しません
+	at nablarch.test.core.reader.yaml.YamlLoader.load(YamlLoader.java:171)
+	at nablarch.test.core.reader.YamlTestDataParser.getListMap(YamlTestDataParser.java:152)
+	at nablarch.test.TestSupport.getListMap(TestSupport.java:233)
+	at nablarch.test.core.db.DbAccessTestSupport.getListMap(DbAccessTestSupport.java:254)
+	at nablarch.test.core.standalone.StandaloneTestSupportTemplate.getTestCases(StandaloneTestSupportTemplate.java:133)
+	at nablarch.test.core.standalone.StandaloneTestSupportTemplate.executeTest(StandaloneTestSupportTemplate.java:111)
+	at nablarch.test.core.standalone.StandaloneTestSupportTemplate.execute(StandaloneTestSupportTemplate.java:96)
+	at nablarch.test.core.standalone.StandaloneTestSupportTemplate.execute(StandaloneTestSupportTemplate.java:58)
+	at com.nablarch.example.ProjectSaveMessageActionRequestTest.testNormalEndExistAllFields(ProjectSaveMessageActionRequestTest.java:22)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+[ERROR] com.nablarch.example.ProjectSaveMessageActionRequestTest.testNormalEndOnlyRequireFields -- Time elapsed: 0.044 s <<< ERROR!
+nablarch.test.core.reader.yaml.YamlSchemaValidationException: 
+YAML file failed schema validation: src/test/java/com/nablarch/example/ProjectSaveMessageActionRequestTest/testNormalEndOnlyRequireFields.yaml
+$.expected_request_body_messages[0].records[0].fields[0].length: string が見つかりました、integer が予期されました
+$.expected_request_body_messages[0].records[0].fields[0].length: 正規表現パターン ^([0-9]+|-)$ に一致しません
+$.response_body_messages[0].records[0].fields[0].length: string が見つかりました、integer が予期されました
+$.response_body_messages[0].records[0].fields[0].length: 正規表現パターン ^([0-9]+|-)$ に一致しません
+	at nablarch.test.core.reader.yaml.YamlLoader.load(YamlLoader.java:171)
+	at nablarch.test.core.reader.YamlTestDataParser.getListMap(YamlTestDataParser.java:152)
+	at nablarch.test.TestSupport.getListMap(TestSupport.java:233)
+	at nablarch.test.core.db.DbAccessTestSupport.getListMap(DbAccessTestSupport.java:254)
+	at nablarch.test.core.standalone.StandaloneTestSupportTemplate.getTestCases(StandaloneTestSupportTemplate.java:133)
+	at nablarch.test.core.standalone.StandaloneTestSupportTemplate.executeTest(StandaloneTestSupportTemplate.java:111)
+	at nablarch.test.core.standalone.StandaloneTestSupportTemplate.execute(StandaloneTestSupportTemplate.java:96)
+	at nablarch.test.core.standalone.StandaloneTestSupportTemplate.execute(StandaloneTestSupportTemplate.java:58)
+	at com.nablarch.example.ProjectSaveMessageActionRequestTest.testNormalEndOnlyRequireFields(ProjectSaveMessageActionRequestTest.java:32)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+[ERROR] com.nablarch.example.ProjectSaveMessageActionRequestTest.testAbNormalEnd -- Time elapsed: 0.080 s <<< ERROR!
+nablarch.test.core.reader.yaml.YamlSchemaValidationException: 
+YAML file failed schema validation: src/test/java/com/nablarch/example/ProjectSaveMessageActionRequestTest/testAbNormalEnd.yaml
+$.expected_request_body_messages[0].records[0].fields[0].length: string が見つかりました、integer が予期されました
+$.expected_request_body_messages[0].records[0].fields[0].length: 正規表現パターン ^([0-9]+|-)$ に一致しません
+$.expected_request_body_messages[1].records[0].fields[0].length: string が見つかりました、integer が予期されました
+$.expected_request_body_messages[1].records[0].fields[0].length: 正規表現パターン ^([0-9]+|-)$ に一致しません
+$.response_body_messages[0].records[0].fields[0].length: string が見つかりました、integer が予期されました
+$.response_body_messages[0].records[0].fields[0].length: 正規表現パターン ^([0-9]+|-)$ に一致しません
+$.response_body_messages[1].records[0].fields[0].length: string が見つかりました、integer が予期されました
+$.response_body_messages[1].records[0].fields[0].length: 正規表現パターン ^([0-9]+|-)$ に一致しません
+	at nablarch.test.core.reader.yaml.YamlLoader.load(YamlLoader.java:171)
+	at nablarch.test.core.reader.YamlTestDataParser.getListMap(YamlTestDataParser.java:152)
+	at nablarch.test.TestSupport.getListMap(TestSupport.java:233)
+	at nablarch.test.core.db.DbAccessTestSupport.getListMap(DbAccessTestSupport.java:254)
+	at nablarch.test.core.standalone.StandaloneTestSupportTemplate.getTestCases(StandaloneTestSupportTemplate.java:133)
+	at nablarch.test.core.standalone.StandaloneTestSupportTemplate.executeTest(StandaloneTestSupportTemplate.java:111)
+	at nablarch.test.core.standalone.StandaloneTestSupportTemplate.execute(StandaloneTestSupportTemplate.java:96)
+	at nablarch.test.core.standalone.StandaloneTestSupportTemplate.execute(StandaloneTestSupportTemplate.java:58)
+	at com.nablarch.example.ProjectSaveMessageActionRequestTest.testAbNormalEnd(ProjectSaveMessageActionRequestTest.java:40)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Errors: 
+[ERROR]   ProjectSaveMessageActionRequestTest.testAbNormalEnd:40 » YamlSchemaValidation YAML file failed schema validation: src/test/java/com/nablarch/example/ProjectSaveMessageActionRequestTest/testAbNormalEnd.yaml
+$.expected_request_body_messages[0].records[0].fields[0].length: string が見つかりました、integer が予期されました
+$.expected_request_body_messages[0].records[0].fields[0].length: 正規表現パターン ^([0-9]+|-)$ に一致しません
+$.expected_request_body_messages[1].records[0].fields[0].length: string が見つかりました、integer が予期されました
+$.expected_request_body_messages[1].records[0].fields[0].length: 正規表現パターン ^([0-9]+|-)$ に一致しません
+$.response_body_messages[0].records[0].fields[0].length: string が見つかりました、integer が予期されました
+$.response_body_messages[0].records[0].fields[0].length: 正規表現パターン ^([0-9]+|-)$ に一致しません
+$.response_body_messages[1].records[0].fields[0].length: string が見つかりました、integer が予期されました
+$.response_body_messages[1].records[0].fields[0].length: 正規表現パターン ^([0-9]+|-)$ に一致しません
+[ERROR]   ProjectSaveMessageActionRequestTest.testNormalEndExistAllFields:22 » YamlSchemaValidation YAML file failed schema validation: src/test/java/com/nablarch/example/ProjectSaveMessageActionRequestTest/testNormalEndExistAllFields.yaml
+$.expected_request_body_messages[0].records[0].fields[0].length: string が見つかりました、integer が予期されました
+$.expected_request_body_messages[0].records[0].fields[0].length: 正規表現パターン ^([0-9]+|-)$ に一致しません
+$.response_body_messages[0].records[0].fields[0].length: string が見つかりました、integer が予期されました
+$.response_body_messages[0].records[0].fields[0].length: 正規表現パターン ^([0-9]+|-)$ に一致しません
+[ERROR]   ProjectSaveMessageActionRequestTest.testNormalEndOnlyRequireFields:32 » YamlSchemaValidation YAML file failed schema validation: src/test/java/com/nablarch/example/ProjectSaveMessageActionRequestTest/testNormalEndOnlyRequireFields.yaml
+$.expected_request_body_messages[0].records[0].fields[0].length: string が見つかりました、integer が予期されました
+$.expected_request_body_messages[0].records[0].fields[0].length: 正規表現パターン ^([0-9]+|-)$ に一致しません
+$.response_body_messages[0].records[0].fields[0].length: string が見つかりました、integer が予期されました
+$.response_body_messages[0].records[0].fields[0].length: 正規表現パターン ^([0-9]+|-)$ に一致しません
+[INFO] 
+[ERROR] Tests run: 3, Failures: 0, Errors: 3, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  14.832 s
+[INFO] Finished at: 2026-10-08T15:40:25+09:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.0:test (default-test) on project nablarch-example-http-messaging-send: 
+[ERROR] 
+[ERROR] Please refer to /home/k10949/workspace/nablarch-example-http-messaging-send/target/surefire-reports for the individual test results.
+[ERROR] Please refer to dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
