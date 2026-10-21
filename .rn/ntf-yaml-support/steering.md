@@ -102,8 +102,8 @@
 - [x] 削除結果（残存 Excel 0件）を `checks/task-4.md` に記録する
 - [x] Excel 削除をコミットする
 - [x] self-check
-- [ ] QA expert review (Agent: general-purpose / Opus)
-- [ ] user review
+- [x] QA expert review (Agent: general-purpose / Opus) — OK
+- [ ] user review（全 task 完了後にまとめて実施）
 **Completion criteria**:
 - 変換対象だった全 Excel ファイルが削除されている
 - 削除がコミットされている
@@ -124,6 +124,6 @@
 - テストログで YamlTestDataParser が実際に使われていることが確認できる
 
 ## State
-- Status: Task #1 完了（self-check OK / QA OK）、Task #2 完了（全レビュー OK）、Task #3 完了（QA OK）、Task #4 QA レビュー中
-- Next: Task #4
+- Status: Task #1 完了（self-check OK / QA OK）、Task #2 完了（全レビュー OK）、Task #3 完了（QA OK）、Task #4 完了（QA OK）、Task #5 実施中
+- Next: Task #5
 - Notes: テストログ先頭には実行時の `git rev-parse HEAD` を記録する（Task #1 QA 改善点）
