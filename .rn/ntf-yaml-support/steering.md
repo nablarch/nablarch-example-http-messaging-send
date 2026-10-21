@@ -58,13 +58,13 @@
 **Purpose**: `pom.xml` に `nablarch-testing-yaml`（test 依存）と `nablarch-testing-converter`（ビルドプラグイン）を追加し、`YamlTestDataParser`（`testDataParser`）を `testDataParser` が参照される全フェーズで有効になる設定ファイルへ追加する（interpreters は testdata.html の設定例どおり）。
 **Prerequisites**: #1
 **Steps**:
-- [ ] `pom.xml` に `nablarch-testing-yaml:1.0.0-SNAPSHOT`（test scope）を追加する
-- [ ] `pom.xml` の `<build><plugins>` に `nablarch-testing-converter:1.0.0-SNAPSHOT` をビルドプラグインとして追加する（from=xls / to=yaml / input / output / overwrite）
-- [ ] 同期送信系（応答電文あり）でアクション実行中にモックが `testDataParser` を参照する構成かを判定する
-- [ ] 判定結果に応じて `YamlTestDataParser` を配置する（interpreters: `dateTimeInterpreter` → `compositeInterpreter`）
-- [ ] `mvn validate` / `mvn dependency:resolve` / `mvn help:describe`（converter）で解決確認
-- [ ] 変更したファイルをコミットする
-- [ ] self-check
+- [x] `pom.xml` に `nablarch-testing-yaml:1.0.0-SNAPSHOT`（test scope）を追加する
+- [x] `pom.xml` の `<build><plugins>` に `nablarch-testing-converter:1.0.0-SNAPSHOT` をビルドプラグインとして追加する（from=xls / to=yaml / input / output / overwrite）
+- [x] 同期送信系（応答電文あり）でアクション実行中にモックが `testDataParser` を参照する構成かを判定する → **該当**（`MessageSender.sendSync` + `RequestTestingMessagingClient`、`RequestTestingSendSyncSupport` が `SystemRepository` から `testDataParser` を取得）
+- [x] 判定結果に応じて `YamlTestDataParser` を配置する → `src/test/resources/http-messaging-send-boot.xml` に集約（`unit-test.xml` が import するため重複定義なし。本番 boot は変更なし）。interpreters: `dateTimeInterpreter` → `compositeInterpreter`
+- [x] `mvn validate` / `mvn dependency:resolve` / `mvn help:describe`（converter）で解決確認 → いずれも成功
+- [x] 変更したファイルをコミットする
+- [x] self-check
 - [ ] QA expert review (Agent: general-purpose / Opus)
 - [ ] language expert review (Agent: general-purpose / Opus)
 - [ ] software-engineering expert review (Agent: general-purpose / Opus)
@@ -123,6 +123,6 @@
 - テストログで YamlTestDataParser が実際に使われていることが確認できる
 
 ## State
-- Status: Task #1 完了（self-check OK / QA OK）、Task #2 実施中
+- Status: Task #1 完了（self-check OK / QA OK）、Task #2 レビュー中
 - Next: Task #2
 - Notes: テストログ先頭には実行時の `git rev-parse HEAD` を記録する（Task #1 QA 改善点）

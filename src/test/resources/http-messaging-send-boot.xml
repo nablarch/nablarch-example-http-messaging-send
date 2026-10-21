@@ -22,6 +22,20 @@
     <property name="schema" value="${nablarch.db.schema}"/>
   </component>
 
+  <!-- YamlTestDataParser でtestDataParserを上書き。
+       リクエスト単体テストではアクション実行時にこのdiConfigでリポジトリが再構築され、
+       同期送信モック（RequestTestingMessagingClient）がここから testDataParser を参照する。
+       unit-test.xml は本ファイルを import しているため、定義はここに集約する。 -->
+  <component name="testDataParser" class="nablarch.test.core.reader.YamlTestDataParser">
+    <property name="dbInfo" ref="dbInfo"/>
+    <property name="interpreters">
+      <list>
+        <component-ref name="dateTimeInterpreter"/>
+        <component-ref name="compositeInterpreter"/>
+      </list>
+    </property>
+  </component>
+
   <!-- 初期化が必要なコンポーネント -->
   <component name="initializer"
              class="nablarch.core.repository.initialization.BasicApplicationInitializer">
