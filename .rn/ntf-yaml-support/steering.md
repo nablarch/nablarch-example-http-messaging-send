@@ -98,10 +98,10 @@
 **Purpose**: 変換対象だった Excel を削除してコミットする。
 **Prerequisites**: #3
 **Steps**:
-- [ ] 変換対象となった Excel ファイルを削除する
-- [ ] 削除結果（残存 Excel 0件）を `checks/task-4.md` に記録する
-- [ ] Excel 削除をコミットする
-- [ ] self-check
+- [x] 変換対象となった Excel ファイルを削除する（`.xls`。`.xlsx` は Task #3 で削除済み）
+- [x] 削除結果（残存 Excel 0件）を `checks/task-4.md` に記録する
+- [x] Excel 削除をコミットする
+- [x] self-check
 - [ ] QA expert review (Agent: general-purpose / Opus)
 - [ ] user review
 **Completion criteria**:
@@ -124,6 +124,6 @@
 - テストログで YamlTestDataParser が実際に使われていることが確認できる
 
 ## State
-- Status: Task #1 完了（self-check OK / QA OK）、Task #2 完了（全レビュー OK）、Task #3 完了（QA OK）、Task #4 実施中
+- Status: Task #1 完了（self-check OK / QA OK）、Task #2 完了（全レビュー OK）、Task #3 完了（QA OK）、Task #4 QA レビュー中
 - Next: Task #4
 - Notes: テストログ先頭には実行時の `git rev-parse HEAD` を記録する（Task #1 QA 改善点）
