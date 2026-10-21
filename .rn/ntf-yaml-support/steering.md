@@ -65,10 +65,10 @@
 - [x] `mvn validate` / `mvn dependency:resolve` / `mvn help:describe`（converter）で解決確認 → いずれも成功
 - [x] 変更したファイルをコミットする
 - [x] self-check
-- [ ] QA expert review (Agent: general-purpose / Opus)
-- [ ] language expert review (Agent: general-purpose / Opus)
-- [ ] software-engineering expert review (Agent: general-purpose / Opus)
-- [ ] user review
+- [x] QA expert review (Agent: general-purpose / Opus) — OK
+- [x] language expert review (Agent: general-purpose / Opus) — OK
+- [x] software-engineering expert review (Agent: general-purpose / Opus) — OK
+- [ ] user review（全 task 完了後にまとめて実施）
 **Completion criteria**:
 - `pom.xml` に `nablarch-testing-yaml:1.0.0-SNAPSHOT` が test スコープで追加されている
 - `pom.xml` の `<build><plugins>` に `nablarch-testing-converter:1.0.0-SNAPSHOT` がビルドプラグイン（plugin直下 `<configuration>` に変換パラメータを設定し、CLIで `convert` ゴールを実行）として追加されている
@@ -123,6 +123,6 @@
 - テストログで YamlTestDataParser が実際に使われていることが確認できる
 
 ## State
-- Status: Task #1 完了（self-check OK / QA OK）、Task #2 レビュー中
-- Next: Task #2
+- Status: Task #1 完了（self-check OK / QA OK）、Task #2 完了（全レビュー OK）、Task #3 実施中
+- Next: Task #3
 - Notes: テストログ先頭には実行時の `git rev-parse HEAD` を記録する（Task #1 QA 改善点）
