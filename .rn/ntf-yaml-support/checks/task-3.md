@@ -7,21 +7,22 @@
 - 生成 YAML（`src/test/java/com/nablarch/example/ProjectSaveMessageActionRequestTest/`）: `setUpDb.yaml`(0B) / `testAbNormalEnd.yaml` / `testNormalEndExistAllFields.yaml` / `testNormalEndOnlyRequireFields.yaml`（Excel の4シートに1対1対応）
 - 生成 YAML は POMなし一時ディレクトリでの個別変換結果（`xls-xlsx-comparison/from-xls/`）と `diff -r` 差分なし。過去実施分（`f941f6a` 時点の YAML）ともバイト一致
 - converter の警告（Excel 由来の既存データ特性。変換で生じたものではない）: `testAbNormalEnd` シートで `EXPECTED_TABLE[1]` の2ブロック目（Excel 78〜80行の `PROJECT_INS_REQ`）が別ブロックを挟んでいるため出力されない。NTF も Excel 形式で後ろのブロックを読まないため、挙動は Excel と同一
+- 同シートの後方には `LIST_MAP=expectedLog1`（Excel 82〜84行）の重複ブロックもあり、これも YAML に出力されない。NTF の `TestDataParsingTemplate#doParse` は別種のブロックに当たると読み込みを終えるため Excel でも読まれず、内容も先頭ブロック（52〜54行）と同一で挙動は同じ
 - `.xls` 本体は未削除（削除は Task #4）
 
 ## Scripts（本タスクで作成）
 
 - `.rn/ntf-yaml-support/scripts/dump_xlsx_cells.py`: `.xlsx` の全シートのセル値を標準ライブラリのみ（zipfile + ElementTree）で TSV 出力する。converter（Apache POI）と独立した経路で Excel 側の値を目視確認するため（環境に xlrd / openpyxl なし）
-- `.rn/ntf-yaml-support/scripts/compare_sampling.py`: `.xlsx` のセル値と生成 YAML の値を、ファイル毎に定義したサンプル箇所で自動突合する（結果: `checks/task-3-sampling.tsv`）。Excel 側には NTF が読み込み時に行う表記上の正規化のみ適用する: (1) 数値セルは `PoiXlsReader` の `Cell#toString()` により `"1.0"` 形式、(2) フィールド長 `-` の電文フィールドは `DataFileFragment#addValue` が `\s*[\r\n]\s*` を除去、(3) セル値 `null` は `nullInterpreter` が null と解釈
+- `.rn/ntf-yaml-support/scripts/compare_sampling.py`: `.xlsx` のセル値と生成 YAML の値を、ファイル毎に定義したサンプル箇所で自動突合する（結果: `checks/task-3-sampling.tsv`）。Excel 側には NTF が読み込み時に行う表記上の正規化のみ適用する: (1) 数値セルは `PoiXlsReader` の `Cell#toString()` により `"1.0"` 形式、(2) フィールド長 `-` の電文フィールドは `DataFileFragment#addValue` が `\s*[\r\n]\s*` を除去、(3) セル値 `null` は `nullInterpreter` が null と解釈。制約: 数値セルの `"1.0"` 形式化は 1e7 未満の整数値のみ Java の `toString` と一致（指数表記・日付書式セルは非対応。本データには該当なし）。PyYAML は YAML 1.1 のため引用符なしキー `no:` を False と読む（NTF の snakeyaml-engine は YAML 1.2 で問題なし。サンプル定義はこのキーを避けている）
 - Excel 側入力には `.xlsx` を用いた（`.xls` と `.xlsx` の変換結果がバイト一致であることを併存チェックで確認済みのため、`.xlsx` のセル値は `.xls` と同内容とみなせる）
 
 ## Completion Criteria
 
 | Criterion | Self-check | Evidence | QA | QA Evidence |
 |---|---|---|---|---|
-| 変換対象の全 Excel に対応する YAML が生成されている | OK | 変換対象 `ProjectSaveMessageActionRequestTest.xls` の4シート（setUpDb / testNormalEndExistAllFields / testNormalEndOnlyRequireFields / testAbNormalEnd）に対応する YAML 4ファイルを生成。convert rc=0 | - | - |
-| サンプリング比較で Excel と YAML の内容が一致している | OK | `compare_sampling.py` で 19件＋setUpDb を突合し NG 0（testNormalEndExistAllFields 7 / testNormalEndOnlyRequireFields 5 / testAbNormalEnd 7、setUpDb は元データ0件のため全件＝データブロックなしを確認）。差異なし | - | - |
-| 変換後の YAML がコミットされている | OK | Task #3 コミットに YAML 4ファイル・`.xlsx` 削除・併存チェック結果・scripts を含める（`.xls` は含めない＝未削除） | - | - |
+| 変換対象の全 Excel に対応する YAML が生成されている | OK | 変換対象 `ProjectSaveMessageActionRequestTest.xls` の4シート（setUpDb / testNormalEndExistAllFields / testNormalEndOnlyRequireFields / testAbNormalEnd）に対応する YAML 4ファイルを生成。convert rc=0 | OK | `.xls` を POI で直接読むとシートは4つで YAML 4ファイルと1対1。setUpDb はコメント2行のみで 0B は正。コミット済み YAML は `from-xls/` と `diff -r` 一致 |
+| サンプリング比較で Excel と YAML の内容が一致している | OK | `compare_sampling.py` で 19件＋setUpDb を突合し NG 0（testNormalEndExistAllFields 7 / testNormalEndOnlyRequireFields 5 / testAbNormalEnd 7、setUpDb は元データ0件のため全件＝データブロックなしを確認）。差異なし | OK | `compare_sampling.py` 再実行で `task-3-sampling.tsv` を再現（7/5/7件＋setUpDb）。別経路で NTF が読む `.xls` を POI HSSF `Cell#toString()` で読み、別サンプル82件を突合し NG 0。YAML 改ざん時に NG 検出され比較は恒真でない |
+| 変換後の YAML がコミットされている | OK | Task #3 コミットに YAML 4ファイル・`.xlsx` 削除・併存チェック結果・scripts を含める（`.xls` は含めない＝未削除） | OK | YAML 4ファイル追加と `.xlsx` 削除を含む。`.xls` は親コミットとバイト一致で残存、`*.java` 差分なし |
 
 ## Sampling Comparison（task-3 のみ）
 
@@ -59,8 +60,8 @@
 
 | Aspect | Verdict | Evidence / Improvement |
 |---|---|---|
-| Meaningful tests/verification | - | - |
-| Edge case coverage | - | - |
+| Meaningful tests/verification | OK | Excel 側の正規化3種（数値セル `Cell#toString`・`-` 長の改行除去・`null`）は NTF ソースで裏付けあり。header 電文の `file-type: "Fixed"` は `DataFile` コンストラクタが `FixedLengthFile#getFileType()` を既定設定するため Excel 経路と等価。QA による `.xls` 直読み82件突合でも NG 0 |
+| Edge case coverage | OK | 数値セル・null・改行入り JSON（`-` 長）・`${systemTime}`・空セル・0件シート（setUpDb）・重複ブロックをカバー。改善（反映済み）: 重複 `LIST_MAP=expectedLog1` の記録、`java_double_str` の適用範囲の注記 |
 
 ## Expert Reviews (code changes only)
 
@@ -69,7 +70,7 @@ N/A — no code changes in this task.
 ## Overall Verdict
 
 - Self-check: OK
-- QA: -
+- QA: OK
 - Language expert: N/A
 - Software-engineering expert: N/A
-- Ready for user review: -
+- Ready for user review: Yes（`.xlsx` 削除の判断をまとめ報告で確認）

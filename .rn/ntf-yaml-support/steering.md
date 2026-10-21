@@ -87,8 +87,8 @@
 - [x] 比較結果を `checks/task-3.md`（＋`checks/task-3-sampling.tsv`）に記録する
 - [x] 変換した YAML をコミットする（Excel `.xls` はまだ削除しない）
 - [x] self-check
-- [ ] QA expert review (Agent: general-purpose / Opus)
-- [ ] user review
+- [x] QA expert review (Agent: general-purpose / Opus) — OK
+- [ ] user review（全 task 完了後にまとめて実施。`.xlsx` 削除の判断も確認）
 **Completion criteria**:
 - 変換対象の全 Excel に対応する YAML が生成されている
 - サンプリング比較で Excel と YAML の内容が一致している
@@ -124,6 +124,6 @@
 - テストログで YamlTestDataParser が実際に使われていることが確認できる
 
 ## State
-- Status: Task #1 完了（self-check OK / QA OK）、Task #2 完了（全レビュー OK）、Task #3 QA レビュー中
-- Next: Task #3
+- Status: Task #1 完了（self-check OK / QA OK）、Task #2 完了（全レビュー OK）、Task #3 完了（QA OK）、Task #4 実施中
+- Next: Task #4
 - Notes: テストログ先頭には実行時の `git rev-parse HEAD` を記録する（Task #1 QA 改善点）
