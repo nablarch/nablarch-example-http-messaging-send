@@ -73,4 +73,4 @@ N/A — no code changes in this task.
 - QA: OK
 - Language expert: N/A
 - Software-engineering expert: N/A
-- Ready for user review: Yes（`.xlsx` 削除の判断をまとめ報告で確認）
+- Ready for user review: Yes（user review: OK。`.xlsx` 変換前削除の扱いもユーザー承認済み）
