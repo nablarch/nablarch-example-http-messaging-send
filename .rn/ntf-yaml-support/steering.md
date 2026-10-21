@@ -112,9 +112,9 @@
 **Purpose**: Excel なしで全テストがパスすることを確認する。
 **Prerequisites**: #4
 **Steps**:
-- [ ] `mvn clean test` が BUILD SUCCESS になることを確認する
-- [ ] テストログで YamlTestDataParser が実際に使われていることを確認する
-- [ ] self-check
+- [x] `mvn clean test` が BUILD SUCCESS になることを確認する（Tests run: 3, Failures: 0, Errors: 0、Excel 0件）
+- [x] テストログで YamlTestDataParser が実際に使われていることを確認する（override WARN・YamlTestDataParser INFO を unit-test.xml 構築時と diConfig 再構築時に確認）
+- [x] self-check
 - [ ] QA expert review (Agent: general-purpose / Opus)
 - [ ] language expert review (Agent: general-purpose / Opus)
 - [ ] software-engineering expert review (Agent: general-purpose / Opus)
@@ -124,6 +124,6 @@
 - テストログで YamlTestDataParser が実際に使われていることが確認できる
 
 ## State
-- Status: Task #1 完了（self-check OK / QA OK）、Task #2 完了（全レビュー OK）、Task #3 完了（QA OK）、Task #4 完了（QA OK）、Task #5 実施中
+- Status: Task #1 完了（self-check OK / QA OK）、Task #2 完了（全レビュー OK）、Task #3 完了（QA OK）、Task #4 完了（QA OK）、Task #5 レビュー中
 - Next: Task #5
 - Notes: テストログ先頭には実行時の `git rev-parse HEAD` を記録する（Task #1 QA 改善点）
