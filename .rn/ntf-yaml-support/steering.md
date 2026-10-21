@@ -115,15 +115,17 @@
 - [x] `mvn clean test` が BUILD SUCCESS になることを確認する（Tests run: 3, Failures: 0, Errors: 0、Excel 0件）
 - [x] テストログで YamlTestDataParser が実際に使われていることを確認する（override WARN・YamlTestDataParser INFO を unit-test.xml 構築時と diConfig 再構築時に確認）
 - [x] self-check
-- [ ] QA expert review (Agent: general-purpose / Opus)
-- [ ] language expert review (Agent: general-purpose / Opus)
-- [ ] software-engineering expert review (Agent: general-purpose / Opus)
-- [ ] user review
+- [x] QA expert review (Agent: general-purpose / Opus) — OK
+- [x] language expert review (Agent: general-purpose / Opus) — OK（移行全体の最終差分を対象）
+- [x] software-engineering expert review (Agent: general-purpose / Opus) — OK（同上）
+- [ ] user review（全 task 完了後にまとめて実施）
 **Completion criteria**:
 - `mvn test` が BUILD SUCCESS で終了する（全テストパス、Excel ファイルなし）
 - テストログで YamlTestDataParser が実際に使われていることが確認できる
 
 ## State
-- Status: Task #1 完了（self-check OK / QA OK）、Task #2 完了（全レビュー OK）、Task #3 完了（QA OK）、Task #4 完了（QA OK）、Task #5 レビュー中
-- Next: Task #5
-- Notes: テストログ先頭には実行時の `git rev-parse HEAD` を記録する（Task #1 QA 改善点）
+- Status: 全 task（#1〜#5）完了。self-check / QA / Language / Software-engineering すべて OK
+- Next: user review（まとめて実施）。push はユーザーが行う
+- ユーザー確認事項: Task #3 で同名併存の未使用 `.xlsx` を変換前に削除した（`.xls` と変換結果がバイト一致の重複。過去実施時の確定方針「①変換前に削除」と同じ扱い）
+- 任意の改善候補（レビュー指摘・NG ではない）: converter への要望（数値セルの `"1.0"` 表記、JSON 期待値の `\` 折り返し、0B `setUpDb.yaml`）、「新規テストデータは YAML で直接記述・converter は移行専用」の明記、pom の SNAPSHOT 版数の property 化
+- Notes: テストログ先頭には実行時の `git rev-parse HEAD` を記録する（Task #1 QA 改善点。Task #5 で反映）
