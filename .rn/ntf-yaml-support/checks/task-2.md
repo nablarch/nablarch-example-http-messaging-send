@@ -47,4 +47,4 @@
 - QA: OK
 - Language expert: OK
 - Software-engineering expert: OK
-- Ready for user review: Yes
+- Ready for user review: Yes（user review: OK）

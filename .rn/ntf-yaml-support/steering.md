@@ -48,7 +48,7 @@
 - [x] 変更ファイルをコミットする
 - [x] self-check
 - [x] QA expert review (Agent: general-purpose / Opus)
-- [ ] user review（全 task 完了後にまとめて実施）
+- [x] user review — OK（全 task 完了後にまとめて実施）
 **Completion criteria**:
 - 既存の `ntf-yaml-support` ブランチ上で作業しており、コミット履歴が維持されている
 - ブランチの既存先端の上に、ワーキングツリー全体が `develop` と同一内容になる新規コミットが1つ積まれている
@@ -69,7 +69,7 @@
 - [x] QA expert review (Agent: general-purpose / Opus) — OK
 - [x] language expert review (Agent: general-purpose / Opus) — OK
 - [x] software-engineering expert review (Agent: general-purpose / Opus) — OK
-- [ ] user review（全 task 完了後にまとめて実施）
+- [x] user review — OK（全 task 完了後にまとめて実施）
 **Completion criteria**:
 - `pom.xml` に `nablarch-testing-yaml:1.0.0-SNAPSHOT` が test スコープで追加されている
 - `pom.xml` の `<build><plugins>` に `nablarch-testing-converter:1.0.0-SNAPSHOT` がビルドプラグイン（plugin直下 `<configuration>` に変換パラメータを設定し、CLIで `convert` ゴールを実行）として追加されている
@@ -88,7 +88,7 @@
 - [x] 変換した YAML をコミットする（Excel `.xls` はまだ削除しない）
 - [x] self-check
 - [x] QA expert review (Agent: general-purpose / Opus) — OK
-- [ ] user review（全 task 完了後にまとめて実施。`.xlsx` 削除の判断も確認）
+- [x] user review — OK（全 task 完了後にまとめて実施。`.xlsx` 変換前削除の扱いもユーザー承認済み）
 **Completion criteria**:
 - 変換対象の全 Excel に対応する YAML が生成されている
 - サンプリング比較で Excel と YAML の内容が一致している
@@ -103,7 +103,7 @@
 - [x] Excel 削除をコミットする
 - [x] self-check
 - [x] QA expert review (Agent: general-purpose / Opus) — OK
-- [ ] user review（全 task 完了後にまとめて実施）
+- [x] user review — OK（全 task 完了後にまとめて実施）
 **Completion criteria**:
 - 変換対象だった全 Excel ファイルが削除されている
 - 削除がコミットされている
@@ -118,14 +118,14 @@
 - [x] QA expert review (Agent: general-purpose / Opus) — OK
 - [x] language expert review (Agent: general-purpose / Opus) — OK（移行全体の最終差分を対象）
 - [x] software-engineering expert review (Agent: general-purpose / Opus) — OK（同上）
-- [ ] user review（全 task 完了後にまとめて実施）
+- [x] user review — OK（全 task 完了後にまとめて実施）
 **Completion criteria**:
 - `mvn test` が BUILD SUCCESS で終了する（全テストパス、Excel ファイルなし）
 - テストログで YamlTestDataParser が実際に使われていることが確認できる
 
 ## State
-- Status: 全 task（#1〜#5）完了。self-check / QA / Language / Software-engineering すべて OK
-- Next: user review（まとめて実施）。push はユーザーが行う
-- ユーザー確認事項: Task #3 で同名併存の未使用 `.xlsx` を変換前に削除した（`.xls` と変換結果がバイト一致の重複。過去実施時の確定方針「①変換前に削除」と同じ扱い）
+- Status: 全 task（#1〜#5）完了。self-check / QA / Language / Software-engineering / user review すべて OK
+- Next: push（ユーザーが行う）
+- ユーザー確認事項（承認済み）: Task #3 で同名併存の未使用 `.xlsx` を変換前に削除した（`.xls` と変換結果がバイト一致の重複。過去実施時の確定方針「①変換前に削除」と同じ扱い）
 - 任意の改善候補（レビュー指摘・NG ではない）: converter への要望（数値セルの `"1.0"` 表記、JSON 期待値の `\` 折り返し、0B `setUpDb.yaml`）、「新規テストデータは YAML で直接記述・converter は移行専用」の明記、pom の SNAPSHOT 版数の property 化
 - Notes: テストログ先頭には実行時の `git rev-parse HEAD` を記録する（Task #1 QA 改善点。Task #5 で反映）
