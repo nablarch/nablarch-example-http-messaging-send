@@ -1,0 +1,131 @@
+# nablarch-example-http-messaging-send NTF YAML 対応 steering
+
+## Overview
+- 目的・背景: NTF（Nablarch Testing Framework）のAI対応として、AIが読み書きできないバイナリ形式のExcelテストデータをYAML形式へ移行する（背景資料: https://github.com/Fintan-contents/nablarch-system-development-guide/pull/211）。
+- Acceptance criteria 要約:
+  - 既存 `ntf-yaml-support` ブランチの履歴（過去の移行コミット）を維持したまま、先端の上に develop 一致ツリーのベースラインコミットを積み、task-1〜5 を**再実施**する（スキップ禁止）
+  - ベースライン（develop 同一）で全テストがパスすることを確認済み
+  - `pom.xml` に `nablarch-testing-yaml:1.0.0-SNAPSHOT`（test 依存）と `nablarch-testing-converter:1.0.0-SNAPSHOT`（`<build><plugins>` のビルドプラグイン）を追加
+  - `YamlTestDataParser`（`testDataParser`）を、`testDataParser` が参照される全フェーズで有効な設定ファイルに追加（`interpreters` は `dateTimeInterpreter` → `compositeInterpreter` の2つのみを直接記載）
+  - 全 Excel を YAML に変換（サンプリング一致確認）→ Excel 削除 → YAML で全テストパス
+- 対象プロジェクト名: nablarch-example-http-messaging-send
+- 指示書: `.rn/ntf-yaml-support/ntf-yaml-support-instructions_http-messaging-send_V1.6.md`（原本: `/home/k10949/instructions/ntf-yaml-support-instructions_http-messaging-send_V1.6.md`）
+
+## Build / Test
+- 環境: Maven 3.9.16 / JDK 17（Temurin 17.0.20、Maven 実行時の Java）、H2 組み込み（別途DBサーバ不要）
+- README の記載: ビルドは `mvn clean package`。DBセットアップ及びエンティティクラスの作成は `mvn package` に含まれ、`mvn generate-resources` で個別実行も可能。
+- 本プロジェクトに `gsp` プロファイルは存在しない（pom の profile は `dev-deploy` のみ）。`gsp-dba-maven-plugin`（execution id `gsp`: generate-ddl / execute-ddl / load-data）は `generate-resources` フェーズに無条件バインドされているため、`-P gsp` 指定は不要。
+- **テストコマンド**: `LANG=ja_JP.UTF-8 LC_ALL=ja_JP.UTF-8 mvn clean test`（`generate-resources` を内包し、DBセットアップ・エンティティ生成〜テストまで一括実行）
+  - エンティティ生成のみ: `mvn clean generate-resources`
+  - ロケール: NTF のメッセージ解決のため `ja_JP.UTF-8` を指定する（`C.UTF-8` ではメッセージ解決に失敗しテストが落ちることを過去作業で確認済み）
+- 依存解決確認: `mvn dependency:resolve` / converter プラグイン確認: `mvn help:describe -Dplugin=com.nablarch.framework:nablarch-testing-converter:1.0.0-SNAPSHOT`
+- 変換: `mvn com.nablarch.framework:nablarch-testing-converter:1.0.0-SNAPSHOT:convert`（pom の plugin `<configuration>` に from/to/input/output/overwrite を設定）
+
+## 対象テスト・Excel
+- テストクラス: `src/test/java/com/nablarch/example/ProjectSaveMessageActionRequestTest.java`（`@BatchRequestTest` のリクエスト単体テスト、テスト3件。**ベースライン基準値: Tests run: 3** — 移行後に件数が減っていないことを確認する）
+- Excel: 同名の `.xls`（49664B）と `.xlsx`（26965B）が**併存**。NTF の `PoiXlsReader` は `.xls` を優先解決するため `.xlsx` はシャドウされた未使用ファイル。Task #3 で併存チェックを行う。
+
+## Scripts
+- `.rn/ntf-yaml-support/scripts/` 配下に格納する。作成時は用途をここと該当 `checks/task-N.md` に記載する。
+- `dump_xlsx_cells.py`（Task #3）: `.xlsx` の全シートのセル値を標準ライブラリのみで TSV 出力する。converter（POI）と独立した経路で Excel 側の値を確認するため
+- `compare_sampling.py`（Task #3）: `.xlsx` のセル値と生成 YAML をサンプル箇所で自動突合する（NTF 読み込み時の表記正規化＝数値セル `"1.0"`・`-` 長フィールドの改行除去・`null` のみ Excel 側に適用）
+
+## Tasks
+
+### #1: ベースライン化（developと同一状態）し、全PASSを確認する
+**Purpose**: 既存の `ntf-yaml-support` ブランチ（履歴維持）の先端の上に、ワーキングツリー全体を `develop` と同一内容へ揃えるコミットを1つ新規に積み、その状態で全テストがパスすることを確認する（過去の移行コミットがあっても必ず再実施）。
+**Prerequisites**: none
+**Steps**:
+- [x] 既存の `ntf-yaml-support` ブランチ上で作業する（新規作成なし。先端 `f941f6a` を維持）
+- [x] 巻き戻さず現在の先端の上に処理を積む（rebase / reset --hard / amend 不使用）
+- [x] `develop` の存在を確認し、`git read-tree -u --reset develop` → `git commit` でベースラインコミット `e52219e` を積む（tree `80792e0` が develop と一致）
+- [x] README を確認し、ビルド・テスト手順を把握する（上記 Build / Test）
+- [x] steering.md の初版を作成する（本ファイル。scripts は現時点で不要）
+- [x] 本指示書を `.rn/ntf-yaml-support/` へ同名コピーし、`cmp` で原本と同一を確認する
+- [x] エンティティ生成（`generate-resources` に gsp 実行がバインド。`mvn clean test` に内包）
+- [x] `LANG=ja_JP.UTF-8 LC_ALL=ja_JP.UTF-8 mvn clean test` → BUILD SUCCESS（Tests run: 3, Failures: 0, Errors: 0）
+- [x] 結果を `checks/task-1.md` に記録する
+- [x] 変更ファイルをコミットする
+- [x] self-check
+- [x] QA expert review (Agent: general-purpose / Opus)
+- [x] user review — OK（全 task 完了後にまとめて実施）
+**Completion criteria**:
+- 既存の `ntf-yaml-support` ブランチ上で作業しており、コミット履歴が維持されている
+- ブランチの既存先端の上に、ワーキングツリー全体が `develop` と同一内容になる新規コミットが1つ積まれている
+- `mvn test` が全テストパスで終了している（BUILD SUCCESS）
+- 本指示書のコピーが `.rn/ntf-yaml-support/` 配下に原本と同一内容で配置され、コミットされている
+
+### #2: 設定変更 — pom.xml と unit-test.xml にYAML対応を追加
+**Purpose**: `pom.xml` に `nablarch-testing-yaml`（test 依存）と `nablarch-testing-converter`（ビルドプラグイン）を追加し、`YamlTestDataParser`（`testDataParser`）を `testDataParser` が参照される全フェーズで有効になる設定ファイルへ追加する（interpreters は testdata.html の設定例どおり）。
+**Prerequisites**: #1
+**Steps**:
+- [x] `pom.xml` に `nablarch-testing-yaml:1.0.0-SNAPSHOT`（test scope）を追加する
+- [x] `pom.xml` の `<build><plugins>` に `nablarch-testing-converter:1.0.0-SNAPSHOT` をビルドプラグインとして追加する（from=xls / to=yaml / input / output / overwrite）
+- [x] 同期送信系（応答電文あり）でアクション実行中にモックが `testDataParser` を参照する構成かを判定する → **該当**（`MessageSender.sendSync` + `RequestTestingMessagingClient`、`RequestTestingSendSyncSupport` が `SystemRepository` から `testDataParser` を取得）
+- [x] 判定結果に応じて `YamlTestDataParser` を配置する → `src/test/resources/http-messaging-send-boot.xml` に集約（`unit-test.xml` が import するため重複定義なし。本番 boot は変更なし）。interpreters: `dateTimeInterpreter` → `compositeInterpreter`
+- [x] `mvn validate` / `mvn dependency:resolve` / `mvn help:describe`（converter）で解決確認 → いずれも成功
+- [x] 変更したファイルをコミットする
+- [x] self-check
+- [x] QA expert review (Agent: general-purpose / Opus) — OK
+- [x] language expert review (Agent: general-purpose / Opus) — OK
+- [x] software-engineering expert review (Agent: general-purpose / Opus) — OK
+- [x] user review — OK（全 task 完了後にまとめて実施）
+**Completion criteria**:
+- `pom.xml` に `nablarch-testing-yaml:1.0.0-SNAPSHOT` が test スコープで追加されている
+- `pom.xml` の `<build><plugins>` に `nablarch-testing-converter:1.0.0-SNAPSHOT` がビルドプラグイン（plugin直下 `<configuration>` に変換パラメータを設定し、CLIで `convert` ゴールを実行）として追加されている
+- `testDataParser`（`YamlTestDataParser`）が全フェーズで有効になる設定ファイルに追加され、`interpreters` は `<list>` に `dateTimeInterpreter` → `compositeInterpreter` の2つのみ
+- `mvn dependency:resolve` が成功し、converter プラグインの `convert` ゴールが `mvn help:describe` で解決できる
+
+### #3: ExcelテストデータをYAMLに変換
+**Purpose**: `nablarch-testing-converter` で Excel テストデータを YAML に変換し、テストのソースツリー内に配置して、変換内容をサンプリングで確認する。
+**Prerequisites**: #2
+**Steps**:
+- [x] 対象 Excel ファイルの所在を確認する（`ProjectSaveMessageActionRequestTest.xls` / `.xlsx`）
+- [x] 同名 `.xls` / `.xlsx` の併存を確認し、POMなし一時ディレクトリで個別変換・差分確認（`.rn/ntf-yaml-support/xls-xlsx-comparison/`、バイト一致）のうえ未使用の `.xlsx` を変換前に削除する → ユーザー報告・判断待ち（まとめ報告で確認）
+- [x] converter README の手順で全対象 Excel を YAML 変換する（rc=0、YAML 4ファイル）
+- [x] 各 YAML について Excel とサンプリング比較する（`scripts/compare_sampling.py`、19件＋setUpDb、NG 0）
+- [x] 比較結果を `checks/task-3.md`（＋`checks/task-3-sampling.tsv`）に記録する
+- [x] 変換した YAML をコミットする（Excel `.xls` はまだ削除しない）
+- [x] self-check
+- [x] QA expert review (Agent: general-purpose / Opus) — OK
+- [x] user review — OK（全 task 完了後にまとめて実施。`.xlsx` 変換前削除の扱いもユーザー承認済み）
+**Completion criteria**:
+- 変換対象の全 Excel に対応する YAML が生成されている
+- サンプリング比較で Excel と YAML の内容が一致している
+- 変換後の YAML がコミットされている
+
+### #4: Excelを削除する
+**Purpose**: 変換対象だった Excel を削除してコミットする。
+**Prerequisites**: #3
+**Steps**:
+- [x] 変換対象となった Excel ファイルを削除する（`.xls`。`.xlsx` は Task #3 で削除済み）
+- [x] 削除結果（残存 Excel 0件）を `checks/task-4.md` に記録する
+- [x] Excel 削除をコミットする
+- [x] self-check
+- [x] QA expert review (Agent: general-purpose / Opus) — OK
+- [x] user review — OK（全 task 完了後にまとめて実施）
+**Completion criteria**:
+- 変換対象だった全 Excel ファイルが削除されている
+- 削除がコミットされている
+
+### #5: YAMLテストデータで全テストをパスさせる
+**Purpose**: Excel なしで全テストがパスすることを確認する。
+**Prerequisites**: #4
+**Steps**:
+- [x] `mvn clean test` が BUILD SUCCESS になることを確認する（Tests run: 3, Failures: 0, Errors: 0、Excel 0件）
+- [x] テストログで YamlTestDataParser が実際に使われていることを確認する（override WARN・YamlTestDataParser INFO を unit-test.xml 構築時と diConfig 再構築時に確認）
+- [x] self-check
+- [x] QA expert review (Agent: general-purpose / Opus) — OK
+- [x] language expert review (Agent: general-purpose / Opus) — OK（移行全体の最終差分を対象）
+- [x] software-engineering expert review (Agent: general-purpose / Opus) — OK（同上）
+- [x] user review — OK（全 task 完了後にまとめて実施）
+**Completion criteria**:
+- `mvn test` が BUILD SUCCESS で終了する（全テストパス、Excel ファイルなし）
+- テストログで YamlTestDataParser が実際に使われていることが確認できる
+
+## State
+- Status: 全 task（#1〜#5）完了。self-check / QA / Language / Software-engineering / user review すべて OK
+- Next: push（ユーザーが行う）
+- ユーザー確認事項（承認済み）: Task #3 で同名併存の未使用 `.xlsx` を変換前に削除した（`.xls` と変換結果がバイト一致の重複。過去実施時の確定方針「①変換前に削除」と同じ扱い）
+- 任意の改善候補（レビュー指摘・NG ではない）: converter への要望（数値セルの `"1.0"` 表記、JSON 期待値の `\` 折り返し、0B `setUpDb.yaml`）、「新規テストデータは YAML で直接記述・converter は移行専用」の明記、pom の SNAPSHOT 版数の property 化
+- Notes: テストログ先頭には実行時の `git rev-parse HEAD` を記録する（Task #1 QA 改善点。Task #5 で反映）
