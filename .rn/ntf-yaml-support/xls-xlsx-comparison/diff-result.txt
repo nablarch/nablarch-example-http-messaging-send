@@ -1,0 +1,9 @@
+exit=0 (0=差分なし)
+d41d8cd98f00b204e9800998ecf8427e  ./from-xls/com/nablarch/example/ProjectSaveMessageActionRequestTest/setUpDb.yaml
+17c25624693abca2a6a144a15619018b  ./from-xls/com/nablarch/example/ProjectSaveMessageActionRequestTest/testAbNormalEnd.yaml
+ae860267a4e3449e4181b02143b1f85c  ./from-xls/com/nablarch/example/ProjectSaveMessageActionRequestTest/testNormalEndExistAllFields.yaml
+b488f3447cdc18b92daeeccc45abb721  ./from-xls/com/nablarch/example/ProjectSaveMessageActionRequestTest/testNormalEndOnlyRequireFields.yaml
+d41d8cd98f00b204e9800998ecf8427e  ./from-xlsx/com/nablarch/example/ProjectSaveMessageActionRequestTest/setUpDb.yaml
+17c25624693abca2a6a144a15619018b  ./from-xlsx/com/nablarch/example/ProjectSaveMessageActionRequestTest/testAbNormalEnd.yaml
+ae860267a4e3449e4181b02143b1f85c  ./from-xlsx/com/nablarch/example/ProjectSaveMessageActionRequestTest/testNormalEndExistAllFields.yaml
+b488f3447cdc18b92daeeccc45abb721  ./from-xlsx/com/nablarch/example/ProjectSaveMessageActionRequestTest/testNormalEndOnlyRequireFields.yaml

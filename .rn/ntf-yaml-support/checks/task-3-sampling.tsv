@@ -1,0 +1,20 @@
+testNormalEndExistAllFields.yaml	testShots[no=1].description	row4	メッセージ送信成功	メッセージ送信成功	OK
+testNormalEndExistAllFields.yaml	SETUP_TABLE[1] PROJECT_INS_REQ_ID=1 PROJECT_NAME	row10	プロジェクト００１	プロジェクト００１	OK
+testNormalEndExistAllFields.yaml	SETUP_TABLE[1] PROJECT_INS_REQ_ID=1 CLIENT_ID(数値セル)	row10	1.0	1.0	OK
+testNormalEndExistAllFields.yaml	SETUP_TABLE[1] PROJECT_INS_REQ_ID=1 SALES	row10	10000	10000	OK
+testNormalEndExistAllFields.yaml	EXPECTED_TABLE[1] UPDATE_DATE	row35	${systemTime}	${systemTime}	OK
+testNormalEndExistAllFields.yaml	RESPONSE_BODY_MESSAGES[case1] JSON	row27	{"statusCode":"201"}	{"statusCode":"201"}	OK
+testNormalEndExistAllFields.yaml	EXPECTED_REQUEST_BODY_MESSAGES[case1] JSON(改行入りセル)	row54	{"projectName":"プロジェクト００１","projectType":"development","projectClass":"s","projectStartDate":"20160101","projectEndDate":"20180304","clientId":1,"projectManager":"鈴木","projectLeader":"佐藤","note":"備考欄","sales":10000,"costOfGoodsSold":1000,"sga":2000,"allocationOfCorpExpenses":3000}	{"projectName":"プロジェクト００１","projectType":"development","projectClass":"s","projectStartDate":"20160101","projectEndDate":"20180304","clientId":1,"projectManager":"鈴木","projectLeader":"佐藤","note":"備考欄","sales":10000,"costOfGoodsSold":1000,"sga":2000,"allocationOfCorpExpenses":3000}	OK
+testNormalEndOnlyRequireFields.yaml	testShots[no=1].description	row4	メッセージ送信成功(必須フィールドのみ)	メッセージ送信成功(必須フィールドのみ)	OK
+testNormalEndOnlyRequireFields.yaml	SETUP_TABLE[1] PROJECT_INS_REQ_ID=1 PROJECT_START_DATE(null)	row10	null	null	OK
+testNormalEndOnlyRequireFields.yaml	SETUP_TABLE[1] PROJECT_INS_REQ_ID=1 SALES(null)	row10	null	null	OK
+testNormalEndOnlyRequireFields.yaml	EXPECTED_REQUEST_HEADER_MESSAGES[case1] 再送要求フラグ	row46	0	0	OK
+testNormalEndOnlyRequireFields.yaml	EXPECTED_REQUEST_BODY_MESSAGES[case1] JSON(改行入りセル)	row54	{"projectName":"プロジェクト００１","projectType":"development","projectClass":"s","projectStartDate":null,"projectEndDate":null,"clientId":1,"projectManager":null,"projectLeader":null,"note":null,"sales":null,"costOfGoodsSold":null,"sga":null,"allocationOfCorpExpenses":null}	{"projectName":"プロジェクト００１","projectType":"development","projectClass":"s","projectStartDate":null,"projectEndDate":null,"clientId":1,"projectManager":null,"projectLeader":null,"note":null,"sales":null,"costOfGoodsSold":null,"sga":null,"allocationOfCorpExpenses":null}	OK
+testAbNormalEnd.yaml	testShots[no=2].description	row5	メッセージ送受信エラーが発生する場合	メッセージ送受信エラーが発生する場合	OK
+testAbNormalEnd.yaml	testShots[no=2].expectedMessageByClient	row5	case2	case2	OK
+testAbNormalEnd.yaml	LIST_MAP=expectedLog1 message1	row54	メッセージの送信に失敗しました。	メッセージの送信に失敗しました。	OK
+testAbNormalEnd.yaml	EXPECTED_TABLE[1] STATUS	row50	2	2	OK
+testAbNormalEnd.yaml	RESPONSE_BODY_MESSAGES[case1] JSON	row27	errorMode:timeout	errorMode:timeout	OK
+testAbNormalEnd.yaml	RESPONSE_BODY_MESSAGES[case2] JSON	row44	errorMode:msgException	errorMode:msgException	OK
+testAbNormalEnd.yaml	EXPECTED_REQUEST_BODY_MESSAGES[case2] JSON(改行入りセル)	row100	{"projectName":"プロジェクト００１","projectType":"development","projectClass":"s","projectStartDate":"20160101","projectEndDate":"20180304","clientId":1,"projectManager":"鈴木","projectLeader":"佐藤","note":"備考欄","sales":10000,"costOfGoodsSold":1000,"sga":2000,"allocationOfCorpExpenses":3000}	{"projectName":"プロジェクト００１","projectType":"development","projectClass":"s","projectStartDate":"20160101","projectEndDate":"20180304","clientId":1,"projectManager":"鈴木","projectLeader":"佐藤","note":"備考欄","sales":10000,"costOfGoodsSold":1000,"sga":2000,"allocationOfCorpExpenses":3000}	OK
+setUpDb.yaml	全行(2行・コメントのみ)	row1,2	データブロックなし	空(0B)	OK

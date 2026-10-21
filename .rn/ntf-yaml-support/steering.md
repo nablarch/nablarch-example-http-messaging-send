@@ -27,7 +27,8 @@
 
 ## Scripts
 - `.rn/ntf-yaml-support/scripts/` 配下に格納する。作成時は用途をここと該当 `checks/task-N.md` に記載する。
-- （現時点で作成したスクリプトなし）
+- `dump_xlsx_cells.py`（Task #3）: `.xlsx` の全シートのセル値を標準ライブラリのみで TSV 出力する。converter（POI）と独立した経路で Excel 側の値を確認するため
+- `compare_sampling.py`（Task #3）: `.xlsx` のセル値と生成 YAML をサンプル箇所で自動突合する（NTF 読み込み時の表記正規化＝数値セル `"1.0"`・`-` 長フィールドの改行除去・`null` のみ Excel 側に適用）
 
 ## Tasks
 
@@ -79,13 +80,13 @@
 **Purpose**: `nablarch-testing-converter` で Excel テストデータを YAML に変換し、テストのソースツリー内に配置して、変換内容をサンプリングで確認する。
 **Prerequisites**: #2
 **Steps**:
-- [ ] 対象 Excel ファイルの所在を確認する
-- [ ] 同名 `.xls` / `.xlsx` の併存を確認し、該当時は POMなし一時ディレクトリで個別変換・差分確認（結果を `.rn/` 配下に保存）のうえ未使用側を変換前に削除する
-- [ ] converter README の手順で全対象 Excel を YAML 変換する
-- [ ] 各 YAML について Excel とサンプリング比較する（各ファイル最低3件）
-- [ ] 比較結果を `checks/task-3.md` に記録する
-- [ ] 変換した YAML をコミットする（Excel はまだ削除しない）
-- [ ] self-check
+- [x] 対象 Excel ファイルの所在を確認する（`ProjectSaveMessageActionRequestTest.xls` / `.xlsx`）
+- [x] 同名 `.xls` / `.xlsx` の併存を確認し、POMなし一時ディレクトリで個別変換・差分確認（`.rn/ntf-yaml-support/xls-xlsx-comparison/`、バイト一致）のうえ未使用の `.xlsx` を変換前に削除する → ユーザー報告・判断待ち（まとめ報告で確認）
+- [x] converter README の手順で全対象 Excel を YAML 変換する（rc=0、YAML 4ファイル）
+- [x] 各 YAML について Excel とサンプリング比較する（`scripts/compare_sampling.py`、19件＋setUpDb、NG 0）
+- [x] 比較結果を `checks/task-3.md`（＋`checks/task-3-sampling.tsv`）に記録する
+- [x] 変換した YAML をコミットする（Excel `.xls` はまだ削除しない）
+- [x] self-check
 - [ ] QA expert review (Agent: general-purpose / Opus)
 - [ ] user review
 **Completion criteria**:
@@ -123,6 +124,6 @@
 - テストログで YamlTestDataParser が実際に使われていることが確認できる
 
 ## State
-- Status: Task #1 完了（self-check OK / QA OK）、Task #2 完了（全レビュー OK）、Task #3 実施中
+- Status: Task #1 完了（self-check OK / QA OK）、Task #2 完了（全レビュー OK）、Task #3 QA レビュー中
 - Next: Task #3
 - Notes: テストログ先頭には実行時の `git rev-parse HEAD` を記録する（Task #1 QA 改善点）
