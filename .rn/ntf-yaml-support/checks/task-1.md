@@ -13,8 +13,8 @@
 
 | Aspect | Verdict | Evidence / Improvement |
 |---|---|---|
-| Meaningful tests/verification | - | - |
-| Edge case coverage | - | - |
+| Meaningful tests/verification | OK | develop 一致ツリーで DB 再構築（DDL・データ投入）・エンティティ生成・全テスト実行を行っており移行後比較の基準として有効。改善: 今後のログ先頭に `git rev-parse HEAD` を残す（f17d36b は `.rn` のみ追加のためテスト対象ツリーは同一） |
+| Edge case coverage | OK | develop に無いファイルの残存はツリーハッシュ完全一致で排除。未追跡 `.idea/` はテストに影響なし。テスト件数3件を基準値として steering に明記し、移行後の件数減少を検出できるようにする |
 
 ## Expert Reviews (code changes only)
 
@@ -23,7 +23,7 @@ N/A — no code changes in this task.
 ## Overall Verdict
 
 - Self-check: OK
-- QA: -
+- QA: OK
 - Language expert: N/A
 - Software-engineering expert: N/A
-- Ready for user review: -
+- Ready for user review: Yes

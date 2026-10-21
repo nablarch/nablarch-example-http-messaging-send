@@ -22,7 +22,7 @@
 - 変換: `mvn com.nablarch.framework:nablarch-testing-converter:1.0.0-SNAPSHOT:convert`（pom の plugin `<configuration>` に from/to/input/output/overwrite を設定）
 
 ## 対象テスト・Excel
-- テストクラス: `src/test/java/com/nablarch/example/ProjectSaveMessageActionRequestTest.java`（`@BatchRequestTest` 相当のリクエスト単体テスト、テスト3件）
+- テストクラス: `src/test/java/com/nablarch/example/ProjectSaveMessageActionRequestTest.java`（`@BatchRequestTest` のリクエスト単体テスト、テスト3件。**ベースライン基準値: Tests run: 3** — 移行後に件数が減っていないことを確認する）
 - Excel: 同名の `.xls`（49664B）と `.xlsx`（26965B）が**併存**。NTF の `PoiXlsReader` は `.xls` を優先解決するため `.xlsx` はシャドウされた未使用ファイル。Task #3 で併存チェックを行う。
 
 ## Scripts
@@ -123,5 +123,6 @@
 - テストログで YamlTestDataParser が実際に使われていることが確認できる
 
 ## State
-- Status: Task #1 実施中
+- Status: Task #1 完了（self-check OK / QA OK）、Task #2 実施中
 - Next: Task #2
+- Notes: テストログ先頭には実行時の `git rev-parse HEAD` を記録する（Task #1 QA 改善点）
