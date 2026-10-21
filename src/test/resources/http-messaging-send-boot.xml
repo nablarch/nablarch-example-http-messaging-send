@@ -22,23 +22,6 @@
     <property name="schema" value="${nablarch.db.schema}"/>
   </component>
 
-  <!-- YAMLテストデータ用インタープリタ（QuotationTrimmerを除く）
-       YAMLライブラリがダブルクォートを構文として処理済みで返すため、QuotationTrimmerは不要。 -->
-  <list name="yamlInterpreters">
-    <component-ref name="nullInterpreter"/>
-    <component-ref name="dateTimeInterpreter"/>
-    <component-ref name="lineSeparatorInterpreter"/>
-    <component-ref name="compositeInterpreter"/>
-  </list>
-
-  <!-- YamlTestDataParser でtestDataParserを上書き。
-       リクエスト単体テストではアクション実行時にこのdiConfigでリポジトリが再構築されるため、
-       unit-test.xml だけでなくこの起動用設定にも定義しておく必要がある。 -->
-  <component name="testDataParser" class="nablarch.test.core.reader.YamlTestDataParser">
-    <property name="dbInfo" ref="dbInfo"/>
-    <property name="interpreters" ref="yamlInterpreters"/>
-  </component>
-
   <!-- 初期化が必要なコンポーネント -->
   <component name="initializer"
              class="nablarch.core.repository.initialization.BasicApplicationInitializer">
